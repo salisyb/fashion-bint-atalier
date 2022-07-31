@@ -1,7 +1,10 @@
 import React from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
-import { css } from "styled-components/macro"; //eslint-disable-line
+
+// import { css } from "styled-components/macro"; //eslint-disable-line
+import AnimatedText from "react-animated-text-content";
+import { useSelector, useDispatch } from "react-redux";
 
 import Header, {
   NavLink,
@@ -11,7 +14,11 @@ import Header, {
   NavToggle,
   DesktopNavLinks,
 } from "../headers/light.js";
+import { logout } from "store/auth.js";
+import { Image, VStack } from "@chakra-ui/react";
 // import TwoColumnWithInput from "./TwoColumnWithInput.js";
+
+// const logoImage = "../../images/bint_logo.png";
 
 const StyledHeader = styled(Header)`
   ${tw`pt-8 max-w-none w-full`}
@@ -23,10 +30,10 @@ const StyledHeader = styled(Header)`
   }
 `;
 
-const PrimaryLink = tw(PrimaryLinkBase)`rounded-full`;
+const PrimaryLink = tw(PrimaryLinkBase)`rounded-full ml-2`;
 const Container = styled.div`
   ${tw`relative -mx-8 -mt-8 bg-center bg-cover h-screen min-h-144`}
-  background-image: url("https://images.unsplash.com/photo-1612423284934-2850a4ea6b0f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80");
+  background-image: url("https://unsplash.com/photos/yXZ8PKZFrIE/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjU5MjQ1NDEz&force=true");
 `;
 
 const OpacityOverlay = tw.div`z-10 absolute inset-0 bg-black opacity-75`;
@@ -35,15 +42,85 @@ const HeroContainer = tw.div`z-20 relative px-6 sm:px-8 mx-auto h-full flex flex
 const Content = tw.div`px-4 flex flex-1 flex-col justify-center items-center`;
 
 const Heading = styled.h1`
-  ${tw`text-3xl text-center sm:text-4xl lg:text-5xl xl:text-6xl font-black text-gray-100 leading-snug -mt-24 sm:mt-0`}
+  ${tw`text-2xl text-center sm:text-4xl lg:text-5xl xl:text-6xl font-black text-gray-100 leading-snug -mt-24 sm:mt-0`}
   span {
-    ${tw`inline-block mt-2`}
+    ${tw`inline-block mt-0`}
   }
 `;
 
 const PrimaryAction = tw.button`rounded-full px-8 py-3 mt-10 text-sm sm:text-base sm:mt-16 sm:px-8 sm:py-4 bg-gray-100 font-bold shadow transition duration-300 bg-primary-500 text-gray-100 hocus:bg-primary-700 hocus:text-gray-200 focus:outline-none focus:shadow-outline`;
+// const ImageLogo = tw.img`w-12 h-12 rounded-full mr-3`;
+
+const TextAnimated = ({ children, reload }) => {
+  React.useEffect(() => {
+    console.log(reload);
+  }, [reload]);
+  return (
+    <>
+      <br />
+      <span style={{ color: "red" }}>Fashion</span>
+
+      <AnimatedText
+        type="words" // animate words or chars
+        animation={{
+          x: "200px",
+          y: "20px",
+          scale: 1.1,
+          ease: "ease-in-out",
+        }}
+        animationType="lights"
+        interval={0.06}
+        duration={0.8}
+        tag="span"
+        className="animated-paragraph"
+        includeWhiteSpaces
+        threshold={0.1}
+        rootMargin="20%"
+      >
+        {children}
+      </AnimatedText>
+    </>
+  );
+};
 
 export default () => {
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  let [counter, setCounter] = React.useState(0);
+
+  const handleLogOutUser = () => {
+    dispatch(logout());
+  };
+
+  const handleReload = React.useCallback(() => {
+    switch (counter) {
+      case 0:
+        setCounter(1);
+        break;
+      case 1:
+        setCounter(2);
+        break;
+      case 2:
+        setCounter(0);
+        break;
+      default:
+        return;
+    }
+  }, [counter]);
+
+  React.useEffect(() => {
+    const animationId = setInterval(() => {
+      handleReload();
+    }, 5000);
+
+    return () => {
+      clearInterval(animationId);
+    };
+  }, [handleReload]);
+
+  const services = [" Academy  ", " House    ", " Accessory"];
+
   const navLinks = [
     <NavLinks key={1}>
       <NavLink href="#">About</NavLink>
@@ -52,7 +129,16 @@ export default () => {
       <NavLink href="#">Pricing</NavLink>
     </NavLinks>,
     <NavLinks key={2}>
-      <PrimaryLink href="/#">Login</PrimaryLink>
+      {isAuthenticated ? (
+        <>
+          <PrimaryLink href="/dashboard">Dashboard</PrimaryLink>
+          <PrimaryLink onClick={handleLogOutUser} href="#">
+            Log out
+          </PrimaryLink>
+        </>
+      ) : (
+        <PrimaryLink href="/login">Login</PrimaryLink>
+      )}
     </NavLinks>,
   ];
 
@@ -62,8 +148,19 @@ export default () => {
       <HeroContainer>
         <StyledHeader links={navLinks} />
         <Content>
-          <Heading>BINT ATELIER FASHION</Heading>
-          <PrimaryAction>Contact Us</PrimaryAction>
+          <VStack alignContent={"center"}>
+            <Image
+              boxSize="200px"
+              objectFit="cover"
+              src={"https://i.postimg.cc/t45cxYc5/bint-logo.png"}
+              alt={"company logo"}
+            />
+            <Heading>
+              <TextAnimated reload={counter}>{services[counter]}</TextAnimated>
+            </Heading>
+
+            <PrimaryAction onClick={handleReload}>Contact Us</PrimaryAction>
+          </VStack>
         </Content>
       </HeroContainer>
     </Container>

@@ -1,12 +1,21 @@
 import React from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
-import { css } from "styled-components/macro"; //eslint-disable-line
+// import { css } from "styled-components/macro"; //eslint-disable-line
 
-import LogoImage from "images/logo-light.svg";
-import { ReactComponent as FacebookIcon } from "images/facebook-icon.svg";
-import { ReactComponent as TwitterIcon } from "images/twitter-icon.svg";
-import { ReactComponent as YoutubeIcon } from "images/youtube-icon.svg";
+// import LogoImage from "../images/bint_logo.svg";
+import LogoImage from "../../images/bint_logo.png";
+
+// import { ReactComponent as FacebookIcon } from "images/facebook-icon.svg";
+// import { ReactComponent as TwitterIcon } from "images/twitter-icon.svg";
+// import { ReactComponent as YoutubeIcon } from "images/youtube-icon.svg";
+import {
+  FaInstagram,
+  FaSnapchatGhost,
+  FaWhatsapp,
+  FaTiktok,
+  FaMailBulk,
+} from "react-icons/fa";
 import { ReactComponent as SvgDecoratorBlob1 } from "images/svg-decorator-blob-9.svg";
 
 const Container = tw.div`relative bg-primary-500 text-gray-100 -mb-8 -mx-8 px-8 py-20 lg:py-24`;
@@ -142,18 +151,26 @@ export default () => {
         <ThreeColRow>
           <LogoContainer>
             <LogoImg src={LogoImage} />
-            <LogoText>Treact Inc.</LogoText>
+            <LogoText>Bint Atelier.</LogoText>
           </LogoContainer>
-          <CopywrightNotice>&copy; 2018 Treact Inc. All Rights Reserved.</CopywrightNotice>
+          <CopywrightNotice>
+            &copy; 2022 PIAS Inc. All Rights Reserved.
+          </CopywrightNotice>
           <SocialLinksContainer>
-            <SocialLink href="https://facebook.com">
-              <FacebookIcon />
+            <SocialLink href="https://instagram.com/bint_atelier">
+              <FaInstagram />
             </SocialLink>
-            <SocialLink href="https://twitter.com">
-              <TwitterIcon />
+            <SocialLink href="https://www.snapchat.com/add/bint_atelier">
+              <FaSnapchatGhost />
             </SocialLink>
-            <SocialLink href="https://youtube.com">
-              <YoutubeIcon />
+            <SocialLink href="https://wa.me/+07046660046">
+              <FaWhatsapp />
+            </SocialLink>
+            <SocialLink href="https://tiktok.com/@bint_atelier">
+              <FaTiktok />
+            </SocialLink>
+            <SocialLink href="bintatelier@gmail.com">
+              <FaMailBulk />
             </SocialLink>
           </SocialLinksContainer>
         </ThreeColRow>

@@ -92,7 +92,9 @@ import EventLandingPage from "demos/EventLandingPage.js";
 // import HostingCloudLandingPage from "demos/HostingCloudLandingPage.js";
 
 /* Inner Pages */
-// import LoginPage from "pages/Login.js";
+import LoginPage from "pages/Login.js";
+import DashboardPage from "pages/Dashboard.js";
+
 // import SignupPage from "pages/Signup.js";
 // import PricingPage from "pages/Pricing.js";
 // import AboutUsPage from "pages/AboutUs.js";
@@ -103,7 +105,7 @@ import EventLandingPage from "demos/EventLandingPage.js";
 
 import ComponentRenderer from "ComponentRenderer.js";
 // import MainLandingPage from "MainLandingPage.js";
-import ThankYouPage from "ThankYouPage.js";
+// import ThankYouPage from "ThankYouPage.js";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
@@ -120,8 +122,11 @@ export default function App() {
         <Route path="/components/:type/:name">
           <ComponentRenderer />
         </Route>
-        <Route path="/thank-you">
-          <ThankYouPage />
+        <Route path="/login">
+          <LoginPage />
+        </Route>
+        <Route path="/dashboard">
+          <DashboardPage />
         </Route>
         <Route path="/">
           <EventLandingPage />
