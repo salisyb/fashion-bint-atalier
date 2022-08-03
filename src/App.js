@@ -1,7 +1,7 @@
 import "tailwindcss/dist/base.css";
 import "styles/globalStyles.css";
 import React from "react";
-import { css } from "styled-components/macro"; //eslint-disable-line
+// import { css } from "styled-components/macro"; //eslint-disable-line
 
 /*
  * This is the entry point component of this project. You can change the below exported default App component to any of
@@ -96,9 +96,9 @@ import LoginPage from "pages/Login.js";
 import DashboardPage from "pages/Dashboard.js";
 
 // import SignupPage from "pages/Signup.js";
-// import PricingPage from "pages/Pricing.js";
-// import AboutUsPage from "pages/AboutUs.js";
-// import ContactUsPage from "pages/ContactUs.js";
+import PricingPage from "pages/Pricing.js";
+import AboutUsPage from "pages/AboutUs.js";
+import ContactUsPage from "pages/ContactUs.js";
 // import BlogIndexPage from "pages/BlogIndex.js";
 // import TermsOfServicePage from "pages/TermsOfService.js";
 // import PrivacyPolicyPage from "pages/PrivacyPolicy.js";
@@ -125,6 +125,15 @@ export default function App() {
         <Route path="/login">
           <LoginPage />
         </Route>
+        <Route path="/about">
+          <AboutUsPage />
+        </Route>
+        <Route path="/contact">
+          <ContactUsPage />
+        </Route>
+        <Route path="/pricing">
+          <PricingPage />
+        </Route>
         <Route path="/dashboard">
           <DashboardPage />
         </Route>
@@ -135,22 +144,3 @@ export default function App() {
     </Router>
   );
 }
-
-// export default EventLandingPage;
-// export default HotelTravelLandingPage;
-// export default AgencyLandingPage;
-// export default SaaSProductLandingPage;
-// export default RestaurantLandingPage;
-// export default ServiceLandingPage;
-// export default HostingCloudLandingPage;
-
-// export default LoginPage;
-// export default SignupPage;
-// export default PricingPage;
-// export default AboutUsPage;
-// export default ContactUsPage;
-// export default BlogIndexPage;
-// export default TermsOfServicePage;
-// export default PrivacyPolicyPage;
-
-// export default MainLandingPage;

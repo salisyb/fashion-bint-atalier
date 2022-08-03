@@ -4,33 +4,26 @@ import styled from "styled-components";
 
 // import { css } from "styled-components/macro"; //eslint-disable-line
 import AnimatedText from "react-animated-text-content";
-import { useSelector, useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 
-import Header, {
-  NavLink,
-  NavLinks,
-  PrimaryLink as PrimaryLinkBase,
-  LogoLink,
-  NavToggle,
-  DesktopNavLinks,
-} from "../headers/light.js";
-import { logout } from "store/auth.js";
+import DefaultHeader from "../headers/CenteredHeader";
+// import { logout } from "store/auth.js";
 import { Image, VStack } from "@chakra-ui/react";
 // import TwoColumnWithInput from "./TwoColumnWithInput.js";
 
 // const logoImage = "../../images/bint_logo.png";
 
-const StyledHeader = styled(Header)`
-  ${tw`pt-8 max-w-none w-full`}
-  ${DesktopNavLinks} ${NavLink}, ${LogoLink} {
-    ${tw`text-gray-100 hover:border-gray-300 hover:text-gray-300`}
-  }
-  ${NavToggle}.closed {
-    ${tw`text-gray-100 hover:text-primary-500`}
-  }
-`;
+// const StyledHeader = styled(Header)`
+//   ${tw`pt-8 max-w-none w-full`}
+//   ${DesktopNavLinks} ${NavLink}, ${LogoLink} {
+//     ${tw`text-gray-100 hover:border-gray-300 hover:text-gray-300`}
+//   }
+//   ${NavToggle}.closed {
+//     ${tw`text-gray-100 hover:text-primary-500`}
+//   }
+// `;
 
-const PrimaryLink = tw(PrimaryLinkBase)`rounded-full ml-2`;
+// const PrimaryLink = tw(PrimaryLinkBase)`rounded-full ml-2`;
 const Container = styled.div`
   ${tw`relative -mx-8 -mt-8 bg-center bg-cover h-screen min-h-144`}
   background-image: url("https://unsplash.com/photos/yXZ8PKZFrIE/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjU5MjQ1NDEz&force=true");
@@ -84,14 +77,10 @@ const TextAnimated = ({ children, reload }) => {
 };
 
 export default () => {
-  const { isAuthenticated } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
+  // const { isAuthenticated } = useSelector((state) => state.auth);
+  // const dispatch = useDispatch();
 
   let [counter, setCounter] = React.useState(0);
-
-  const handleLogOutUser = () => {
-    dispatch(logout());
-  };
 
   const handleReload = React.useCallback(() => {
     switch (counter) {
@@ -121,32 +110,12 @@ export default () => {
 
   const services = [" Academy  ", " House    ", " Accessory"];
 
-  const navLinks = [
-    <NavLinks key={1}>
-      <NavLink href="#">About</NavLink>
-      <NavLink href="#">Contact</NavLink>
-      <NavLink href="#">Locations</NavLink>
-      <NavLink href="#">Pricing</NavLink>
-    </NavLinks>,
-    <NavLinks key={2}>
-      {isAuthenticated ? (
-        <>
-          <PrimaryLink href="/dashboard">Dashboard</PrimaryLink>
-          <PrimaryLink onClick={handleLogOutUser} href="#">
-            Log out
-          </PrimaryLink>
-        </>
-      ) : (
-        <PrimaryLink href="/login">Login</PrimaryLink>
-      )}
-    </NavLinks>,
-  ];
-
   return (
     <Container>
       <OpacityOverlay />
       <HeroContainer>
-        <StyledHeader links={navLinks} />
+        {/* <StyledHeader links={navLinks} /> */}
+        <DefaultHeader />
         <Content>
           <VStack alignContent={"center"}>
             <Image
