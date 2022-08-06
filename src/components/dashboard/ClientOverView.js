@@ -119,7 +119,6 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
 
 const PersonalInformation = ({ data }) => (
   <Box>
-    
     {Object.entries(data).map(([key, value]) => {
       return (
         <>
@@ -159,17 +158,17 @@ const ViewEditOrder = ({ data }) => {
   );
 };
 
-const boxStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+// const boxStyle = {
+//   position: "absolute",
+//   top: "50%",
+//   left: "50%",
+//   transform: "translate(-50%, -50%)",
+//   width: 400,
+//   bgcolor: "background.paper",
+//   border: "2px solid #000",
+//   boxShadow: 24,
+//   p: 4,
+// };
 
 const imageUrl =
   "https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80";
