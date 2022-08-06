@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import { Button, TextField, Typography } from "@mui/material";
 
 const initialMFData = {
+  measurementFor: { value: "", label: "Measurement For" },
   bustPoint: { value: 10, label: "Bust Point" },
   underBust: { value: 14, label: "Under Bust" },
   halfLength: { value: 16, label: "Half Length" },
@@ -48,7 +49,7 @@ export default function MeasurementForm({
   formData,
 }) {
   const [formError, setFormError] = React.useState("");
-  const [generateForm, setGenForm] = React.useState(genForm())
+  const [generateForm, setGenForm] = React.useState(genForm());
 
   return (
     <Form>

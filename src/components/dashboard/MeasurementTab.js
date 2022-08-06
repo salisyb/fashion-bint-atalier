@@ -14,6 +14,7 @@ import Tab from "@mui/material/Tab";
 import MeasurementForm from "./MeasurementForm";
 
 const initialMFData = {
+  measurementFor: { value: "", label: "Measurement For" },
   bustPoint: { value: 10, label: "Bust Point" },
   underBust: { value: 14, label: "Under Bust" },
   halfLength: { value: 16, label: "Half Length" },
@@ -42,6 +43,41 @@ const getInitialMFData = () => {
   return form;
 };
 
+const MeasurementInformation = ({ data }) => (
+  <>
+    {!Object.keys(data).length < 1 && (
+      <>
+        {Object.entries(data).map(([key, value]) => {
+          console.log(key, value);
+          return (
+            <>
+              {/* <Grid container spacing={2} mt={2} backgroundColor="red"> */}
+              {/* <Grid xs={12} sm={3}> */}
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Typography
+                  sx={{ fontSize: { xs: "14px", sm: "20px", md: "25px" } }}
+                  color={"#8B8989"}
+                >
+                  {key}
+                </Typography>
+                {/* </Grid> */}
+                {/* <Grid xs={12} sm={3}> */}
+                <Typography
+                  sx={{ fontSize: { xs: "14px", sm: "20px", md: "25px" } }}
+                >
+                  {value}
+                </Typography>
+                {/* </Grid> */}
+                {/* </Grid> */}
+              </Box>
+            </>
+          );
+        })}
+      </>
+    )}
+  </>
+);
+
 export default function MeasurementTab() {
   const [measurement, setMeasurement] = React.useState([]);
   const [formData, setFormData] = React.useState(getInitialMFData());
@@ -58,12 +94,21 @@ export default function MeasurementTab() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleAddMeasurement = (m) => {
-    setMeasurement([m, ...measurement]);
+  const handleAddMeasurement = () => {
+    let id = 0;
+
+    if (measurement.length > 0) {
+      id = measurement[measurement.length - 1].id + 1;
+    }
+    setMeasurement([{ id: id, ...formData }, ...measurement]);
     setAdd(false);
 
     // console.log(formData);
   };
+
+  React.useEffect(() => {
+    // console.log(measurement);
+  }, [measurement]);
 
   return (
     <Box sx={{ bgcolor: "background.paper" }}>
@@ -77,11 +122,11 @@ export default function MeasurementTab() {
         // style={{ backgroundColor: "red" }}
         aria-label="scrollable auto tabs example"
       >
-        {measurementList.map((item) => (
-          <Tab key={item.id} label={item.measurementName} />
+        {measurement.map((item) => (
+          <Tab key={item.id} label={item.measurementFor} />
         ))}
       </Tabs>
-      {add && (
+      {add ? (
         <Box
           sx={{
             maxHeight: "350px",
@@ -109,6 +154,16 @@ export default function MeasurementTab() {
               Add Measurement
             </Button>
           </Box>
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            maxHeight: "350px",
+            overflow: "scroll",
+            "&::-webkit-scrollbar": { display: "none" },
+          }}
+        >
+          <MeasurementInformation data={measurement[0] || {}} />
         </Box>
       )}
       {!add && (

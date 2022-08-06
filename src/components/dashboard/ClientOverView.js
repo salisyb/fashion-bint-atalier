@@ -119,6 +119,7 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
 
 const PersonalInformation = ({ data }) => (
   <Box>
+    
     {Object.entries(data).map(([key, value]) => {
       return (
         <>
