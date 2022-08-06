@@ -3,21 +3,22 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 // import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import { Container, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import CardGrid from "./CardGrid";
 import Table from "./StyleTable";
 import Modal from "./Modal";
 import Form from "./Form";
 
 import { TextField } from "@mui/material";
-import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
+// import Select from "@mui/material/Select";
+// import InputLabel from "@mui/material/InputLabel";
+// import MenuItem from "@mui/material/MenuItem";
+// import FormControl from "@mui/material/FormControl";
 
 import Button from "@mui/material/Button";
 import PlusIcon from "@mui/icons-material/ControlPoint";
 import TabPanel from "./TabPanel";
+import MeasurementTab from "./MeasurementTab";
 
 const AddNewOrder = ({ onSubmit, formData, onInput }) => {
   const [formError, setFormError] = React.useState();
@@ -147,14 +148,12 @@ const ViewEditOrder = ({ data }) => {
         {currentTab === 0 ? (
           <PersonalInformation data={data} />
         ) : (
-          "Measurement Chart Information"
+          <MeasurementTab />
         )}
       </TabPanel>
-      {currentTab !== 0 && (
-        <div style={{ position: "absolute", bottom: 20, right: 20 }}>
-          <Button variant="contained">Add</Button>
-        </div>
-      )}
+      {/* {currentTab !== 0 && (
+       
+      )} */}
     </div>
   );
 };
