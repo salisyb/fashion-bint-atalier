@@ -24,6 +24,7 @@ const slice = createSlice({
   name: "auth",
   initialState: {
     user: user_session.user || null,
+    clients: user_session.clients || [],
     token: user_session.token || null,
     isAuthenticated: user_session.token ? true : false,
     loading: false,
@@ -33,6 +34,10 @@ const slice = createSlice({
       state.user = null;
       state.isAuthenticated = false;
       localStorage.removeItem("user_session");
+    },
+    addClients: (state, { payload }) => {
+      
+      state.clients = [payload, ...state.clients];
     },
   },
   extraReducers: {
@@ -54,12 +59,22 @@ const slice = createSlice({
 });
 export default slice.reducer;
 
-const { logoutSuccess } = slice.actions;
+const { logoutSuccess, addClients } = slice.actions;
 
 export const logout = () => async (dispatch) => {
   try {
     // const res = await api.post('/api/auth/logout/')
     return dispatch(logoutSuccess());
+  } catch (e) {
+    return console.error(e.message);
+  }
+};
+
+export const addClient = (client) => async (dispatch) => {
+  try {
+
+
+    return dispatch(addClients(client));
   } catch (e) {
     return console.error(e.message);
   }
