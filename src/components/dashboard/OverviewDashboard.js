@@ -3,24 +3,193 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 // import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import { Container, Typography } from "@mui/material";
+import {
+  Container,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import CardGrid from "./CardGrid";
 import Table from "./StyleTable";
 import Modal from "./Modal";
 import Form from "./Form";
+import * as yup from "yup";
+import { Formik } from "formik";
 
 import Button from "@mui/material/Button";
 import PlusIcon from "@mui/icons-material/ControlPoint";
+import { useDispatch } from "react-redux";
 
-const AddNewOrder = () => {
+const addNewClientSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email("Please enter valid email")
+    .required("Email Address is Required"),
+  username: yup.string().required("phone number is Required"),
+  phone_number: yup
+    .string()
+    .required("This field is Required")
+    .matches(
+      /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
+      "Phone number is not valid"
+    ),
+  full_name: yup
+    .string()
+    .min(8, ({ min }) => `full name must be at least ${min} characters`)
+    .required("full name is Required"),
+  address: yup.string().required("Client Address is Required"),
+  password: yup
+    .string()
+    .min(6, ({ min }) => `Password must be at least ${min} characters`)
+    .required("Password is required"),
+});
+
+const initialState = {
+  client: "",
+  measurement: "",
+  collection_date: "",
+  amount_to_paid: "",
+  amount_paid: "",
+  no_of_attire: "",
+  style: "",
+  description: "",
+};
+
+const AddNewOrder = ({ onSubmit, formData, onInput }) => {
+  const dispatch = useDispatch();
+
+  const handleRegisterClient = (form) => {
+    console.log(form);
+  };
+
   return (
     <div>
-      <Form />
-      <Box mt={2}>
-        <Button variant={"contained"} sx={{ width: "80%" }}>
-          Submit
-        </Button>
-      </Box>
+      <Formik
+        validationSchema={addNewClientSchema}
+        initialValues={initialState}
+        onSubmit={(data) => handleRegisterClient(data)}
+      >
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          isValid,
+        }) => (
+          <Form>
+            {/* <TextField
+              id="standard-password-input"
+              label="Clients"
+              required
+              name={"client"}
+              value={values.client}
+              onChange={handleChange("client")}
+              type="text"
+              autoComplete="current-password"
+              variant="standard"
+            /> */}
+            <InputLabel id="demo-simple-select-standard-label">
+              Client
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-standard-label"
+              id="demo-simple-select-standard"
+              value={values.client}
+              onChange={handleChange}
+              label="Age"
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={10}>Ten</MenuItem>
+              <MenuItem value={20}>Twenty</MenuItem>
+              <MenuItem value={30}>Thirty</MenuItem>
+            </Select>
+            <TextField
+              id="standard-password-input"
+              label="Measurement"
+              type="text"
+              name="measurement"
+              value={values.measurement}
+              onChange={handleChange("measurement")}
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <TextField
+              id="standard-password-input"
+              label="Collection Date"
+              type="data"
+              name="collection_data"
+              value={values.collection_date}
+              onChange={handleChange("collection_date")}
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <TextField
+              id="standard-password-input"
+              label="Amount to Paid"
+              type="text"
+              name="amount_to_paid"
+              value={values.amount_to_paid}
+              onChange={handleChange("amount_to_paid")}
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <TextField
+              id="standard-password-input"
+              label="Amount Paid"
+              type="text"
+              name="amount_paid"
+              value={values.amount_paid}
+              onChange={handleChange("amount_paid")}
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <TextField
+              id="standard-password-input"
+              label="No of attire"
+              type="text"
+              name="no_of_attire"
+              value={values.no_of_attire}
+              onChange={handleChange("no_of_attire")}
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <TextField
+              id="standard-password-input"
+              label="Style"
+              type="text"
+              name="style"
+              value={values.style}
+              onChange={handleChange("style")}
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <TextField
+              id="standard-password-input"
+              label="Description"
+              type="text"
+              name="password"
+              value={values.description}
+              onChange={handleChange("description")}
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <Box mt={2}>
+              <Button
+                variant={"contained"}
+                sx={{ width: "100%" }}
+                onClick={handleSubmit}
+              >
+                Add New Client
+              </Button>
+            </Box>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };

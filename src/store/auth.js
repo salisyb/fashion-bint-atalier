@@ -16,6 +16,40 @@ export const login = createAsyncThunk(
   }
 );
 
+export const getClient = createAsyncThunk(
+  "auth/getClient",
+  async (userLoginDetails, { rejectWithValue }) => {
+    const response = await api.get("/api/v1/auth/client");
+    if (!response.ok) {
+      return rejectWithValue(response.problem);
+    }
+    return response.data;
+  }
+);
+
+export const createClient = createAsyncThunk(
+  "auth/createClient",
+  async (clientForm, { rejectWithValue }) => {
+    const response = await api.post("/api/v1/auth/client/", clientForm);
+    if (!response.ok) {
+      return rejectWithValue(response.problem);
+    }
+
+    return response.data;
+  }
+);
+
+export const getOrder = createAsyncThunk(
+  "auth/getOrder",
+  async (userLoginDetails, { rejectWithValue }) => {
+    const response = await api.get("/api/v1/auth/order", userLoginDetails);
+    if (!response.ok) {
+      return rejectWithValue(response.problem);
+    }
+    return response.data;
+  }
+);
+
 const user_session = localStorage.getItem("user_session")
   ? JSON.parse(localStorage.getItem("user_session"))
   : {};
@@ -25,6 +59,7 @@ const slice = createSlice({
   initialState: {
     user: user_session.user || null,
     clients: user_session.clients || [],
+    order: user_session.clients || [],
     token: user_session.token || null,
     isAuthenticated: user_session.token ? true : false,
     loading: false,
@@ -36,7 +71,6 @@ const slice = createSlice({
       localStorage.removeItem("user_session");
     },
     addClients: (state, { payload }) => {
-      
       state.clients = [payload, ...state.clients];
     },
   },
@@ -55,6 +89,29 @@ const slice = createSlice({
     [login.rejected]: (state) => {
       state.loading = false;
     },
+
+    [getClient.pending]: (state) => {
+      state.loading = true;
+    },
+    [getClient.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.clients = payload;
+    },
+    [getClient.rejected]: (state) => {
+      state.loading = false;
+    },
+
+    [createClient.pending]: (state) => {
+      state.loading = true;
+    },
+    [createClient.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.clients = [payload, ...state.clients];
+    },
+    [createClient.rejected]: (state, { payload }) => {
+      state.loading = false;
+      console.log(payload);
+    },
   },
 });
 export default slice.reducer;
@@ -65,16 +122,6 @@ export const logout = () => async (dispatch) => {
   try {
     // const res = await api.post('/api/auth/logout/')
     return dispatch(logoutSuccess());
-  } catch (e) {
-    return console.error(e.message);
-  }
-};
-
-export const addClient = (client) => async (dispatch) => {
-  try {
-
-
-    return dispatch(addClients(client));
   } catch (e) {
     return console.error(e.message);
   }

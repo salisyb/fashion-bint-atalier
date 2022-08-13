@@ -8,6 +8,8 @@ import CardGrid from "./CardGrid";
 import Table from "./StyleTable";
 import Modal from "./Modal";
 import Form from "./Form";
+import { Formik } from "formik";
+import * as yup from "yup";
 
 import { TextField } from "@mui/material";
 // import Select from "@mui/material/Select";
@@ -19,120 +21,212 @@ import Button from "@mui/material/Button";
 import PlusIcon from "@mui/icons-material/ControlPoint";
 import TabPanel from "./TabPanel";
 import MeasurementTab from "./MeasurementTab";
+import { useDispatch, useSelector } from "react-redux";
+import { createClient, getClient } from "store/auth";
+
+const addNewClientSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email("Please enter valid email")
+    .required("Email Address is Required"),
+  username: yup.string().required("phone number is Required"),
+  phone_number: yup
+    .string()
+    .required("This field is Required")
+    .matches(
+      /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
+      "Phone number is not valid"
+    ),
+  full_name: yup
+    .string()
+    .min(8, ({ min }) => `full name must be at least ${min} characters`)
+    .required("full name is Required"),
+  address: yup.string().required("Client Address is Required"),
+  password: yup
+    .string()
+    .min(6, ({ min }) => `Password must be at least ${min} characters`)
+    .required("Password is required"),
+});
+
+const initialState = {
+  full_name: "",
+  phone_number: "",
+  email: "",
+  address: "",
+  username: "",
+  password: "",
+};
 
 const AddNewOrder = ({ onSubmit, formData, onInput }) => {
-  const [formError, setFormError] = React.useState();
-  const onSubmitValidate = () => {
-    let isValid = true;
+  const dispatch = useDispatch();
 
-    Object.keys(formData).forEach((key) => {
-      setFormError(null);
-      if (formData[key] === "") {
-        // alert("Please complete the form first");
-        setFormError("Please complete the form to add new client");
-        isValid = false;
-      }
-    });
+  const handleRegisterClient = (form) => {
+    const { full_name, phone_number, email, address, username, password } =
+      form;
+    const [first_name, last_name] = full_name.split(" ");
 
-    if (isValid) {
-      onSubmit();
-    }
+    dispatch(
+      createClient({
+        first_name,
+        last_name,
+        phone_number,
+        email,
+        address,
+        username,
+        password,
+      })
+    );
+
+    onSubmit();
   };
+
   return (
     <div>
-      <Form>
-        <Typography color={"red"}>{formError}</Typography>
-        <TextField
-          id="standard-password-input"
-          label="Username"
-          required
-          name={"username"}
-          value={formData.username}
-          onChange={onInput}
-          type="text"
-          autoComplete="current-password"
-          variant="standard"
-        />
-        <TextField
-          id="standard-password-input"
-          label="Full Name"
-          type="text"
-          name="fullName"
-          value={formData.fullName}
-          onChange={onInput}
-          autoComplete="current-password"
-          variant="standard"
-        />
-        <TextField
-          id="standard-password-input"
-          label="Email"
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={onInput}
-          autoComplete="current-password"
-          variant="standard"
-        />
-        <TextField
-          id="standard-password-input"
-          label="Phone number"
-          type="text"
-          name="phone"
-          value={formData.phone}
-          onChange={onInput}
-          autoComplete="current-password"
-          variant="standard"
-        />
-        <TextField
-          id="standard-password-input"
-          label="Address"
-          type="text"
-          name="address"
-          value={formData.address}
-          onChange={onInput}
-          autoComplete="current-password"
-          variant="standard"
-        />
-        <TextField
-          id="standard-password-input"
-          label="Password"
-          type="text"
-          name="password"
-          value={formData.password}
-          onChange={onInput}
-          autoComplete="current-password"
-          variant="standard"
-        />
-        <Box mt={2}>
-          <Button
-            variant={"contained"}
-            sx={{ width: "100%" }}
-            onClick={onSubmitValidate}
-          >
-            Add New Client
-          </Button>
-        </Box>
-      </Form>
+      <Formik
+        validationSchema={addNewClientSchema}
+        initialValues={initialState}
+        onSubmit={(data) => handleRegisterClient(data)}
+      >
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          isValid,
+        }) => (
+          <Form>
+            <TextField
+              id="standard-password-input"
+              label="Username"
+              required
+              name={"username"}
+              value={values.username}
+              onChange={handleChange("username")}
+              type="text"
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <TextField
+              id="standard-password-input"
+              label="Full Name"
+              type="text"
+              name="full_name"
+              value={values.full_name}
+              onChange={handleChange("full_name")}
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <TextField
+              id="standard-password-input"
+              label="Email"
+              type="email"
+              name="email"
+              value={values.email}
+              onChange={handleChange("email")}
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <TextField
+              id="standard-password-input"
+              label="Phone number"
+              type="text"
+              name="phone_number"
+              value={values.phone_number}
+              onChange={handleChange("phone_number")}
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <TextField
+              id="standard-password-input"
+              label="Address"
+              type="text"
+              name="address"
+              value={values.address}
+              onChange={handleChange("address")}
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <TextField
+              id="standard-password-input"
+              label="Password"
+              type="text"
+              name="password"
+              value={values.password}
+              onChange={handleChange("password")}
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <Box mt={2}>
+              <Button
+                variant={"contained"}
+                sx={{ width: "100%" }}
+                onClick={handleSubmit}
+              >
+                Add New Client
+              </Button>
+            </Box>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };
 
 const PersonalInformation = ({ data }) => (
   <Box>
-    {Object.entries(data).map(([key, value]) => {
-      return (
-        <>
-          <Grid container spacing={2} mt={2}>
-            <Grid xs={12} sm={3}>
-              <Typography color={"#8B8989"}>{key.toUpperCase()}</Typography>
-            </Grid>
-            <Grid xs={12} sm={3}>
-              <Typography>{value.toUpperCase()}</Typography>
-            </Grid>
-          </Grid>
-        </>
-      );
-    })}
+    {console.log(data)}
+    <>
+      <Grid container spacing={2} mt={2}>
+        {/* username */}
+        <Grid xs={12} sm={6}>
+          <Typography color={"#8B8989"}>{"Username"}</Typography>
+        </Grid>
+        <Grid xs={12} sm={6}>
+          <Typography>{data && data.username}</Typography>
+        </Grid>
+
+        {/* full name  */}
+        <Grid xs={12} sm={6}>
+          <Typography color={"#8B8989"}>{"Full name"}</Typography>
+        </Grid>
+        <Grid xs={12} sm={6}>
+          <Typography>{`${data && data.first_name} ${
+            data && data.last_name
+          }`}</Typography>
+        </Grid>
+
+        {/* email address */}
+        <Grid xs={12} sm={6}>
+          <Typography color={"#8B8989"}>{"Email Address"}</Typography>
+        </Grid>
+        <Grid xs={12} sm={6}>
+          <Typography>{data && data.email}</Typography>
+        </Grid>
+
+        {/* phone number  */}
+        <Grid xs={12} sm={6}>
+          <Typography color={"#8B8989"}>{"Phone number"}</Typography>
+        </Grid>
+        <Grid xs={12} sm={6}>
+          <Typography>
+            {data &&
+              data.clientsinformation &&
+              data.clientsinformation.phone_number}
+          </Typography>
+        </Grid>
+
+        {/* address  */}
+        <Grid xs={12} sm={6}>
+          <Typography color={"#8B8989"}>{"Address"}</Typography>
+        </Grid>
+        <Grid xs={12} sm={6}>
+          <Typography>
+            {data && data.clientsinformation && data.clientsinformation.address}
+          </Typography>
+        </Grid>
+      </Grid>
+    </>
   </Box>
 );
 
@@ -148,7 +242,7 @@ const ViewEditOrder = ({ data }) => {
         {currentTab === 0 ? (
           <PersonalInformation data={data} />
         ) : (
-          <MeasurementTab />
+          <MeasurementTab userData={data} />
         )}
       </TabPanel>
       {/* {currentTab !== 0 && (
@@ -185,6 +279,7 @@ const clientInitialValue = {
 export default function ClientOverview() {
   const [modalOpen, setModalOpen] = React.useState(false);
   const handleCloseModal = () => setModalOpen(!modalOpen);
+  const dispatch = useDispatch();
 
   const [selectedOption, setSelectedOption] = React.useState(null);
   const [title, setTitle] = React.useState("");
@@ -193,9 +288,16 @@ export default function ClientOverview() {
   const [client, setClient] = React.useState([]);
   const [clientData, setClientData] = React.useState(null);
 
+  const { clients } = useSelector((state) => state.auth);
+  console.log(clients);
+
+  React.useEffect(() => {
+    // get list of client
+
+    dispatch(getClient());
+  }, []);
+
   const handleAddClient = () => {
-    setClient([...client, addClientForm]);
-    setAddClientForm(clientInitialValue);
     handleCloseModal();
   };
 
@@ -293,7 +395,7 @@ export default function ClientOverview() {
               <Typography variant={"p"} color={"white"}>
                 List of Client
               </Typography>
-              {client.length < 1 ? (
+              {clients.length < 1 ? (
                 <div
                   style={{
                     display: "flex",
@@ -311,7 +413,7 @@ export default function ClientOverview() {
                 <Table
                   onRowClick={handleOpenModal}
                   tableHeader={["Client Name", "Client Number"]}
-                  tableContent={client}
+                  tableContent={clients}
                 />
               )}
             </div>

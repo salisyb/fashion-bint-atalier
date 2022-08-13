@@ -5,6 +5,8 @@ import App from "./App";
 import Modal from "react-modal";
 import store from "./store";
 
+
+
 Modal.setAppElement("#root");
 
 ReactDOM.render(

@@ -11,13 +11,6 @@ function createData(name, calories, fat, carbs, protein) {
   return { name, calories };
 }
 
-const rows = [
-  createData("Wedding Cloth", 1594, 6.0, 24, 4.0),
-  createData("Wedding Cloth", 2373, 9.0, 37, 4.3),
-  createData("Wedding cloth", 2626, 16.0, 24, 6.0),
-  createData("Wedding Cloth", 3054, 3.7, 67, 4.3),
-  createData("Wedding Cloth", 3566, 16.0, 49, 3.9),
-];
 
 export default function BasicTable({ onRowClick, tableHeader, tableContent }) {
   return (
@@ -48,10 +41,10 @@ export default function BasicTable({ onRowClick, tableHeader, tableContent }) {
                 scope="row"
                 sx={{ align: "left", color: "#6c7293" }}
               >
-                {row.fullName}
+                {`${row.first_name} ${row.last_name}`}
               </TableCell>
               <TableCell sx={{ align: "left", color: "#6c7293" }}>
-                {row.phone}
+                {row.clientsinformation && row.clientsinformation.phone_number}
               </TableCell>
             </TableRow>
           ))}

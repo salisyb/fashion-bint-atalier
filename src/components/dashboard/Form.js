@@ -16,7 +16,7 @@ function Form({ children }) {
       noValidate
       autoComplete="off"
     >
-      <FormControl>
+      <FormControl variant="standard">
         <div>{children}</div>
       </FormControl>
     </Box>

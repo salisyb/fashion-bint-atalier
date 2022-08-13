@@ -1,3 +1,5 @@
+import { positions, Provider } from "react-alert";
+import AlertMUITemplate from "react-alert-template-mui";
 import "tailwindcss/dist/base.css";
 import "styles/globalStyles.css";
 import React from "react";
@@ -109,38 +111,44 @@ import ComponentRenderer from "ComponentRenderer.js";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
+const options = {
+  position: positions.MIDDLE,
+};
+
 export default function App() {
   // If you want to disable the animation just use the disabled `prop` like below on your page's component
   // return <AnimationRevealPage disabled>xxxxxxxxxx</AnimationRevealPage>;
 
   return (
-    <Router>
-      <Switch>
-        <Route path="/components/:type/:subtype/:name">
-          <ComponentRenderer />
-        </Route>
-        <Route path="/components/:type/:name">
-          <ComponentRenderer />
-        </Route>
-        <Route path="/login">
-          <LoginPage />
-        </Route>
-        <Route path="/about">
-          <AboutUsPage />
-        </Route>
-        <Route path="/contact">
-          <ContactUsPage />
-        </Route>
-        <Route path="/pricing">
-          <PricingPage />
-        </Route>
-        <Route path="/dashboard">
-          <DashboardPage />
-        </Route>
-        <Route path="/">
-          <EventLandingPage />
-        </Route>
-      </Switch>
-    </Router>
+    <Provider template={AlertMUITemplate} {...options}>
+      <Router>
+        <Switch>
+          <Route path="/components/:type/:subtype/:name">
+            <ComponentRenderer />
+          </Route>
+          <Route path="/components/:type/:name">
+            <ComponentRenderer />
+          </Route>
+          <Route path="/login">
+            <LoginPage />
+          </Route>
+          <Route path="/about">
+            <AboutUsPage />
+          </Route>
+          <Route path="/contact">
+            <ContactUsPage />
+          </Route>
+          <Route path="/pricing">
+            <PricingPage />
+          </Route>
+          <Route path="/dashboard">
+            <DashboardPage />
+          </Route>
+          <Route path="/">
+            <EventLandingPage />
+          </Route>
+        </Switch>
+      </Router>
+    </Provider>
   );
 }

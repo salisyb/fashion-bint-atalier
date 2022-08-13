@@ -18,6 +18,8 @@
     "formik": "^2.2.9",
     "framer-motion": "4.1.17",
     "react": "^17.0.2",
+    "react-alert": "^7.0.3",
+    "react-alert-template-mui": "^1.0.7",
     "react-anchor-link-smooth-scroll": "^1.0.12",
     "react-animated-text-content": "^1.0.1",
     "react-dom": "^17.0.2",

@@ -12,6 +12,8 @@ import Button from "@mui/material/Button";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import MeasurementForm from "./MeasurementForm";
+import { getClientMeasurement } from "api/clients.api";
+import { useSelector } from "react-redux";
 
 const initialMFData = {
   measurementFor: { value: "", label: "Measurement For" },
@@ -43,48 +45,72 @@ const getInitialMFData = () => {
   return form;
 };
 
-const MeasurementInformation = ({ data }) => (
-  <>
-    {!Object.keys(data).length < 1 && (
-      <>
-        {Object.entries(data).map(([key, value]) => {
-          console.log(key, value);
-          return (
-            <>
-              {/* <Grid container spacing={2} mt={2} backgroundColor="red"> */}
-              {/* <Grid xs={12} sm={3}> */}
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography
-                  sx={{ fontSize: { xs: "14px", sm: "20px", md: "25px" } }}
-                  color={"#8B8989"}
-                >
-                  {key}
-                </Typography>
-                {/* </Grid> */}
-                {/* <Grid xs={12} sm={3}> */}
-                <Typography
-                  sx={{ fontSize: { xs: "14px", sm: "20px", md: "25px" } }}
-                >
-                  {value}
-                </Typography>
-                {/* </Grid> */}
-                {/* </Grid> */}
-              </Box>
-            </>
-          );
-        })}
-      </>
-    )}
-  </>
+const MeasurementText = ({ label, value }) => (
+  <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+    <Typography
+      sx={{ fontSize: { xs: "14px", sm: "20px", md: "25px" } }}
+      color={"#8B8989"}
+    >
+      {label}
+    </Typography>
+
+    <Typography sx={{ fontSize: { xs: "14px", sm: "20px", md: "25px" } }}>
+      {value}
+    </Typography>
+  </Box>
 );
 
-export default function MeasurementTab() {
+const MeasurementInformation = ({ measurement }) => (
+  <Box>
+    <MeasurementText label={"Owner"} value={measurement.measurement_owner} />
+    <MeasurementText label={"Bust Point"} value={measurement.bust_point} />
+    <MeasurementText label={"Under Bust"} value={measurement.under_bust} />
+    <MeasurementText label={"Half Length"} value={measurement.half_length} />
+    <MeasurementText
+      label={"Shoulder to hip"}
+      value={measurement.shoulder_to_hip}
+    />
+    <MeasurementText
+      label={"Blouse Length"}
+      value={measurement.blouse_length}
+    />
+    <MeasurementText
+      label={"Shoulder to knee"}
+      value={measurement.shoulder_to_knee}
+    />
+    <MeasurementText label={"Gown Length"} value={measurement.gown_length} />
+    <MeasurementText
+      label={"Waist to Knee"}
+      value={measurement.waist_to_knee}
+    />
+    <MeasurementText label={"Skirt Length"} value={measurement.skirt_length} />
+    <MeasurementText label={"Bust round"} value={measurement.bust_round} />
+    <MeasurementText
+      label={"Under Bust Round"}
+      value={measurement.under_bust_round}
+    />
+    <MeasurementText label={"Waist Round"} value={measurement.waist_round} />
+    <MeasurementText label={"Hips Round"} value={measurement.hips_round} />
+    <MeasurementText
+      label={"Sleeve Length"}
+      value={measurement.sleeve_length}
+    />
+    <MeasurementText
+      label={"Sleeve round/biceps"}
+      value={measurement.sleeve_round_biceps}
+    />
+    <MeasurementText label={"Shoulder"} value={measurement.shoulder} />
+    <MeasurementText label={"Arm Hole"} value={measurement.arm_hole} />
+  </Box>
+);
+
+export default function MeasurementTab({ userData }) {
   const [measurement, setMeasurement] = React.useState([]);
   const [formData, setFormData] = React.useState(getInitialMFData());
   const [value, setValue] = React.useState(0);
   const [add, setAdd] = React.useState(false);
 
-  const [measurementList, setMeasurementList] = React.useState([]);
+  const { token } = useSelector((state) => state.auth);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -94,13 +120,9 @@ export default function MeasurementTab() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleAddMeasurement = () => {
-    let id = 0;
-
-    if (measurement.length > 0) {
-      id = measurement[measurement.length - 1].id + 1;
-    }
-    setMeasurement([{ id: id, ...formData }, ...measurement]);
+  const handleAddMeasurement = (data) => {
+   
+    setMeasurement([...measurement, data]);
     setAdd(false);
 
     // console.log(formData);
@@ -108,7 +130,15 @@ export default function MeasurementTab() {
 
   React.useEffect(() => {
     // console.log(measurement);
-  }, [measurement]);
+    getMeasurement();
+  }, []);
+
+  const getMeasurement = async () => {
+    const data = await getClientMeasurement(userData.id, token);
+    setMeasurement(data);
+  };
+
+  console.log(measurement);
 
   return (
     <Box sx={{ bgcolor: "background.paper" }}>
@@ -123,7 +153,7 @@ export default function MeasurementTab() {
         aria-label="scrollable auto tabs example"
       >
         {measurement.map((item) => (
-          <Tab key={item.id} label={item.measurementFor} />
+          <Tab key={item.id} label={item.measurement_owner} />
         ))}
       </Tabs>
       {add ? (
@@ -137,6 +167,7 @@ export default function MeasurementTab() {
           <MeasurementForm
             onMeasurementAdd={handleAddMeasurement}
             formData={formData}
+            userData={userData}
             onTextChange={onFormTextChange}
           />
           <Box
@@ -146,13 +177,13 @@ export default function MeasurementTab() {
               bottom: 20,
             }}
           >
-            <Button
+            {/* <Button
               onClick={handleAddMeasurement}
               variant="contained"
               sx={{ width: { xs: "100%" } }}
             >
               Add Measurement
-            </Button>
+            </Button> */}
           </Box>
         </Box>
       ) : (
@@ -163,7 +194,9 @@ export default function MeasurementTab() {
             "&::-webkit-scrollbar": { display: "none" },
           }}
         >
-          <MeasurementInformation data={measurement[0] || {}} />
+          {measurement.length > 0 && (
+            <MeasurementInformation measurement={measurement[value]} />
+          )}
         </Box>
       )}
       {!add && (
