@@ -25,6 +25,9 @@ import OrderIcon from "@mui/icons-material/ShoppingCart";
 
 import Overview from "../components/dashboard/OverviewDashboard";
 import ClientOverview from "../components/dashboard/ClientOverView";
+import { useSelector, useDispatch } from "react-redux";
+import { getListOfOrder } from "api/clients.api";
+import { setOrders } from "store/auth";
 
 const drawerWidth = 240;
 
@@ -105,8 +108,23 @@ export default () => {
   const [open, setOpen] = React.useState(false);
   const [current, setCurrent] = React.useState("Home");
 
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.auth);
+
   const handleCloseDrawer = () => {
     setOpen(false);
+  };
+
+  React.useEffect(() => {
+    getOrders();
+  }, []);
+
+  const getOrders = async () => {
+    const orders = await getListOfOrder(token);
+
+    if (orders.length > 0) {
+      dispatch(setOrders(orders));
+    }
   };
 
   const handleToggleDrawer = () => {

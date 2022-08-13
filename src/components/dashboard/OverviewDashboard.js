@@ -4,7 +4,10 @@ import Box from "@mui/material/Box";
 // import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import {
+  Chip,
   Container,
+  Divider,
+  FormControl,
   InputLabel,
   MenuItem,
   Select,
@@ -13,14 +16,24 @@ import {
 } from "@mui/material";
 import CardGrid from "./CardGrid";
 import Table from "./StyleTable";
+import TableOrder from "./StyleTableOrder";
 import Modal from "./Modal";
 import Form from "./Form";
 import * as yup from "yup";
 import { Formik } from "formik";
+import SelectItem from "./SelectItem";
+
+// import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 import Button from "@mui/material/Button";
 import PlusIcon from "@mui/icons-material/ControlPoint";
-import { useDispatch } from "react-redux";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+import { useDispatch, useSelector } from "react-redux";
+import { getClientMeasurement } from "api/clients.api";
+
+// import { LocalizationProvider } from "@mui/x-date-pickers";
 
 const addNewClientSchema = yup.object().shape({
   email: yup
@@ -47,11 +60,8 @@ const addNewClientSchema = yup.object().shape({
 });
 
 const initialState = {
-  client: "",
   measurement: "",
-  collection_date: "",
-  amount_to_paid: "",
-  amount_paid: "",
+  amount: "",
   no_of_attire: "",
   style: "",
   description: "",
@@ -59,17 +69,35 @@ const initialState = {
 
 const AddNewOrder = ({ onSubmit, formData, onInput }) => {
   const dispatch = useDispatch();
+  const [value, setValue] = React.useState(new Date());
+  const [client, setClient] = React.useState("");
+  const [selectedMeasurement, setSelectedMeasurement] = React.useState([]);
+
+  const { clients, token } = useSelector((state) => state.auth);
+
+  const handleSetClient = async (e) => {
+    setClient(e.target.value);
+
+    const data = await getClientMeasurement(e.target.value, token);
+    setSelectedMeasurement(data);
+  };
+
+  const handleFinishSelectingClient = () => {
+    console.log(client);
+  };
 
   const handleRegisterClient = (form) => {
-    console.log(form);
+    console.log({ ...form, collection_date: value.format(), client: client });
   };
 
   return (
     <div>
       <Formik
-        validationSchema={addNewClientSchema}
+        // validationSchema={addNewClientSchema}
         initialValues={initialState}
-        onSubmit={(data) => handleRegisterClient(data)}
+        onSubmit={(data) => {
+          handleRegisterClient(data);
+        }}
       >
         {({
           handleChange,
@@ -79,66 +107,91 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
           errors,
           isValid,
         }) => (
-          <Form>
-            {/* <TextField
-              id="standard-password-input"
-              label="Clients"
-              required
-              name={"client"}
-              value={values.client}
-              onChange={handleChange("client")}
-              type="text"
-              autoComplete="current-password"
-              variant="standard"
-            /> */}
-            <InputLabel id="demo-simple-select-standard-label">
-              Client
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-standard-label"
-              id="demo-simple-select-standard"
-              value={values.client}
-              onChange={handleChange}
-              label="Age"
+          <Form type="outlined">
+            <FormControl
+              // variant="standard"
+              sx={{
+                m: 1,
+                minWidth: { xs: 220, sm: 225 },
+                maxWidth: { xs: 220, sm: 225 },
+              }}
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
-            </Select>
+              <InputLabel id="demo-simple-select-autowidth-label">
+                Clients
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-autowidth-label"
+                id="demo-simple-select-autowidth"
+                value={client}
+                onBlur={handleFinishSelectingClient}
+                onChange={(e) => handleSetClient(e)}
+                autoWidth
+                label="Clients"
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {clients.map((client) => (
+                  <MenuItem value={client.id}>{client.email}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl
+              // variant="standard"
+              sx={{
+                m: 1,
+                minWidth: { xs: 220, sm: 225 },
+                maxWidth: { xs: 220, sm: 225 },
+              }}
+            >
+              <InputLabel id="demo-simple-select-autowidth-label">
+                Measurement
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-autowidth-label"
+                id="demo-simple-select-autowidth"
+                value={values.measurement}
+                onChange={handleChange("measurement")}
+                autoWidth
+                label="Age"
+              >
+                {selectedMeasurement.length < 1 ? (
+                  <MenuItem value="">
+                    <em>Please select client first..</em>
+                  </MenuItem>
+                ) : (
+                  selectedMeasurement.map((item) => (
+                    <MenuItem value={item.id}>
+                      {item.measurement_owner}
+                    </MenuItem>
+                  ))
+                )}
+              </Select>
+            </FormControl>
+
+            <LocalizationProvider dateAdapter={AdapterMoment}>
+              <FormControl variant="standard">
+                <MobileDatePicker
+                  label="Date of collections"
+                  value={value}
+                  onChange={(newValue) => {
+                    setValue(newValue);
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </FormControl>
+            </LocalizationProvider>
             <TextField
               id="standard-password-input"
-              label="Measurement"
-              type="text"
-              name="measurement"
-              value={values.measurement}
-              onChange={handleChange("measurement")}
-              autoComplete="current-password"
-              variant="standard"
-            />
-            <TextField
-              id="standard-password-input"
-              label="Collection Date"
-              type="data"
-              name="collection_data"
-              value={values.collection_date}
-              onChange={handleChange("collection_date")}
-              autoComplete="current-password"
-              variant="standard"
-            />
-            <TextField
-              id="standard-password-input"
-              label="Amount to Paid"
+              label="Amount"
               type="text"
               name="amount_to_paid"
-              value={values.amount_to_paid}
-              onChange={handleChange("amount_to_paid")}
+              value={values.amount}
+              onChange={handleChange("amount")}
               autoComplete="current-password"
-              variant="standard"
+              // variant="standard"
             />
-            <TextField
+            {/* <TextField
               id="standard-password-input"
               label="Amount Paid"
               type="text"
@@ -146,8 +199,8 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
               value={values.amount_paid}
               onChange={handleChange("amount_paid")}
               autoComplete="current-password"
-              variant="standard"
-            />
+              // variant="standard"
+            /> */}
             <TextField
               id="standard-password-input"
               label="No of attire"
@@ -156,7 +209,7 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
               value={values.no_of_attire}
               onChange={handleChange("no_of_attire")}
               autoComplete="current-password"
-              variant="standard"
+              // variant="standard"
             />
             <TextField
               id="standard-password-input"
@@ -166,17 +219,17 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
               value={values.style}
               onChange={handleChange("style")}
               autoComplete="current-password"
-              variant="standard"
+              // variant="standard"
             />
             <TextField
-              id="standard-password-input"
+              id="standard-multiline-static"
               label="Description"
-              type="text"
-              name="password"
+              multiline
+              rows={4}
               value={values.description}
               onChange={handleChange("description")}
-              autoComplete="current-password"
-              variant="standard"
+              // defaultValue="Order description"
+              // variant="standard"
             />
             <Box mt={2}>
               <Button
@@ -184,7 +237,7 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
                 sx={{ width: "100%" }}
                 onClick={handleSubmit}
               >
-                Add New Client
+                Submit order
               </Button>
             </Box>
           </Form>
@@ -194,11 +247,157 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
   );
 };
 
-const ViewEditOrder = () => {
+const ViewEditOrder = ({ data }) => {
   return (
-    <div>
-      <h1>View edit order</h1>
-    </div>
+    <Box sx={{ minWidth: { xs: "xs" } }}>
+      {/* order detail */}
+      <>
+        <Divider>
+          <Chip label="ORDER DETAIL" />
+        </Divider>
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              my: "10px",
+            }}
+          >
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              Client Name
+            </Typography>
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              {data.client.first_name} {data.client.last_name}
+            </Typography>
+          </Box>
+          <Divider />
+        </>
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              my: "10px",
+            }}
+          >
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              Client Email
+            </Typography>
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              {data.client.email}
+            </Typography>
+          </Box>
+          <Divider />
+        </>
+
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              my: "10px",
+            }}
+          >
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              Number of Attire
+            </Typography>
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              {data.no_of_attire}
+            </Typography>
+          </Box>
+          <Divider />
+        </>
+
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              my: "10px",
+            }}
+          >
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              Style
+            </Typography>
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              {data.style}
+            </Typography>
+          </Box>
+          <Divider />
+        </>
+
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              my: "10px",
+            }}
+          >
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+               Description
+            </Typography>
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              {data.description}
+            </Typography>
+          </Box>
+          <Divider />
+        </>
+
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              my: "10px",
+            }}
+          >
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              Collection Date
+            </Typography>
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              {data.collection_date}
+            </Typography>
+          </Box>
+          <Divider />
+        </>
+
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              my: "10px",
+            }}
+          >
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              Amount
+            </Typography>
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              ₦{data.amount}
+            </Typography>
+          </Box>
+          <Divider />
+        </>
+      </>
+
+      {/* measurement detail */}
+      <>
+        <Divider sx={{ marginTop: "30px" }}>
+          <Chip label="MEASUREMENT DETAIL" />
+        </Divider>
+        <Box>
+          <Typography></Typography>
+        </Box>
+      </>
+
+      <Box marginTop={"40px"} spacing={2}>
+        <Button variant="outlined" sx={{ marginRight: "10px" }}>
+          Edit
+        </Button>
+        <Button variant="outlined">Generate Invoice</Button>
+      </Box>
+    </Box>
   );
 };
 
@@ -224,11 +423,13 @@ export default function OverviewDashboard() {
   const [selectedOption, setSelectedOption] = React.useState(null);
   const [title, setTitle] = React.useState("");
 
+  const { order } = useSelector((state) => state.auth);
+
   const handleOpenModal = (from, data = null) => {
-    console.log("click");
     switch (from) {
       case "view edit order":
-        setSelectedOption(<ViewEditOrder />);
+        setSelectedOption(<ViewEditOrder data={data} />);
+        setTitle("Order information");
         handleCloseModal();
         break;
 
@@ -305,10 +506,10 @@ export default function OverviewDashboard() {
               <Typography variant={"p"} color={"white"}>
                 Order status
               </Typography>
-              <Table
+              <TableOrder
                 onRowClick={handleOpenModal}
                 tableHeader={["Client Name", "Order Number"]}
-                tableContent={[]}
+                tableContent={order}
               />
             </div>
           </Grid>

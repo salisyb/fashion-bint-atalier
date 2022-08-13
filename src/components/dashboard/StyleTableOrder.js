@@ -12,6 +12,7 @@ function createData(name, calories, fat, carbs, protein) {
 }
 
 export default function BasicTable({ onRowClick, tableHeader, tableContent }) {
+  console.log(tableContent);
   return (
     <TableContainer component={Paper}>
       <Table
@@ -31,7 +32,7 @@ export default function BasicTable({ onRowClick, tableHeader, tableContent }) {
         <TableBody>
           {tableContent.map((row) => (
             <TableRow
-              onClick={() => onRowClick("view edit client", row)}
+              onClick={() => onRowClick("view edit order", row)}
               key={row.id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
@@ -40,10 +41,11 @@ export default function BasicTable({ onRowClick, tableHeader, tableContent }) {
                 scope="row"
                 sx={{ align: "left", color: "#6c7293" }}
               >
-                {`${row.first_name} ${row.last_name}`}
+                {`${row.client.first_name} ${row.client.last_name}`}
               </TableCell>
               <TableCell sx={{ align: "left", color: "#6c7293" }}>
-                {row.clientsinformation && row.clientsinformation.phone_number}
+                {/* {row.clientsinformation && row.clientsinformation.phone_number} */}
+                {Math.floor(Math.random() * 1000000000)}
               </TableCell>
             </TableRow>
           ))}

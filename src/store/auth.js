@@ -41,8 +41,8 @@ export const createClient = createAsyncThunk(
 
 export const getOrder = createAsyncThunk(
   "auth/getOrder",
-  async (userLoginDetails, { rejectWithValue }) => {
-    const response = await api.get("/api/v1/auth/order", userLoginDetails);
+  async (token, { rejectWithValue }) => {
+    const response = await api.get("/api/v1/auth/order");
     if (!response.ok) {
       return rejectWithValue(response.problem);
     }
@@ -65,6 +65,9 @@ const slice = createSlice({
     loading: false,
   },
   reducers: {
+    setOrders: (state, { payload }) => {
+      state.order = payload;
+    },
     logoutSuccess: (state, action) => {
       state.user = null;
       state.isAuthenticated = false;
@@ -116,7 +119,7 @@ const slice = createSlice({
 });
 export default slice.reducer;
 
-const { logoutSuccess, addClients } = slice.actions;
+export const { logoutSuccess, addClients, setOrders } = slice.actions;
 
 export const logout = () => async (dispatch) => {
   try {

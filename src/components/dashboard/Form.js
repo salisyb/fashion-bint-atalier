@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 // import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 
-function Form({ children }) {
+function Form({ children, type = "standard" }) {
   return (
     <Box
       component="form"
@@ -16,7 +16,7 @@ function Form({ children }) {
       noValidate
       autoComplete="off"
     >
-      <FormControl variant="standard">
+      <FormControl variant={type} sx={{ m: 1, minWidth: { xs: 220, sm: 280 } }}>
         <div>{children}</div>
       </FormControl>
     </Box>
