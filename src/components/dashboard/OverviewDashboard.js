@@ -31,7 +31,8 @@ import Button from "@mui/material/Button";
 import PlusIcon from "@mui/icons-material/ControlPoint";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { useDispatch, useSelector } from "react-redux";
-import { getClientMeasurement } from "api/clients.api";
+import { createClientOrder, getClientMeasurement } from "api/clients.api";
+import { minHeight } from "@mui/system";
 
 // import { LocalizationProvider } from "@mui/x-date-pickers";
 
@@ -86,8 +87,13 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
     console.log(client);
   };
 
-  const handleRegisterClient = (form) => {
-    console.log({ ...form, collection_date: value.format(), client: client });
+  const handleRegisterClient = async (form) => {
+    const data = await createClientOrder(
+      { ...form, collection_date: value.format(), client: client },
+      token
+    );
+
+    console.log(data);
   };
 
   return (
@@ -249,7 +255,11 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
 
 const ViewEditOrder = ({ data }) => {
   return (
-    <Box sx={{ minWidth: { xs: "xs" } }}>
+    <Box
+      sx={{
+        minWidth: { xs: "xs" },
+      }}
+    >
       {/* order detail */}
       <>
         <Divider>
@@ -335,7 +345,7 @@ const ViewEditOrder = ({ data }) => {
             }}
           >
             <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-               Description
+              Description
             </Typography>
             <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
               {data.description}
@@ -386,9 +396,25 @@ const ViewEditOrder = ({ data }) => {
         <Divider sx={{ marginTop: "30px" }}>
           <Chip label="MEASUREMENT DETAIL" />
         </Divider>
-        <Box>
-          <Typography></Typography>
+        <Box></Box>
+      </>
+
+      <>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            my: "10px",
+          }}
+        >
+          <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+            Measurement Name
+          </Typography>
+          <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+            {data.measurement.measurement_owner}
+          </Typography>
         </Box>
+        <Divider />
       </>
 
       <Box marginTop={"40px"} spacing={2}>
