@@ -66,8 +66,13 @@ const slice = createSlice({
   },
   reducers: {
     setOrders: (state, { payload }) => {
-      state.order = payload;
+      state.order = payload
     },
+
+    addOrders: (state, { payload }) => {
+      state.order = [payload, ...state.order]
+    },
+  
     logoutSuccess: (state, action) => {
       state.user = null;
       state.isAuthenticated = false;
@@ -119,7 +124,7 @@ const slice = createSlice({
 });
 export default slice.reducer;
 
-export const { logoutSuccess, addClients, setOrders } = slice.actions;
+export const { logoutSuccess, addClients, setOrders, addOrders} = slice.actions;
 
 export const logout = () => async (dispatch) => {
   try {

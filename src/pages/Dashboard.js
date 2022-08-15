@@ -24,6 +24,7 @@ import ClientIcon from "@mui/icons-material/PeopleAlt";
 import OrderIcon from "@mui/icons-material/ShoppingCart";
 
 import Overview from "../components/dashboard/OverviewDashboard";
+import ClientDashboard from "../components/dashboard/OverviewDashboardC";
 import ClientOverview from "../components/dashboard/ClientOverView";
 import { useSelector, useDispatch } from "react-redux";
 import { getListOfOrder } from "api/clients.api";
@@ -109,7 +110,7 @@ export default () => {
   const [current, setCurrent] = React.useState("Home");
 
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.auth);
+  const { token, user } = useSelector((state) => state.auth);
 
   const handleCloseDrawer = () => {
     setOpen(false);
@@ -123,6 +124,7 @@ export default () => {
     const orders = await getListOfOrder(token);
 
     if (orders.length > 0) {
+      console.log(orders);
       dispatch(setOrders(orders));
     }
   };
@@ -136,9 +138,13 @@ export default () => {
   };
   return (
     // <AnimationRevealPage>
-    <Box sx={{ display: "flex", backgroundColor: "#00000" }}>
-      <CssBaseline />
-      {/* <AppBar position="fixed" open={open}>
+
+    <>
+      {!user.clientsinformation ? (
+        <>
+          <Box sx={{ display: "flex", backgroundColor: "#00000" }}>
+            <CssBaseline />
+            {/* <AppBar position="fixed" open={open}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -157,90 +163,105 @@ export default () => {
           </Typography>
         </Toolbar>
       </AppBar> */}
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton onClick={handleToggleDrawer}>
-            {theme.direction === "rtl" ? (
-              // <ChevronRightIcon />
-              <MenuIcon />
-            ) : open ? (
-              <ChevronLeftIcon />
-            ) : (
-              <MenuIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {drawerMenuList.map((item, index) => (
-            <ListItem key={item.id} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                onClick={() => handleNavigation(item.label)}
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.label}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
+            <Drawer variant="permanent" open={open}>
+              <DrawerHeader>
+                <IconButton onClick={handleToggleDrawer}>
+                  {theme.direction === "rtl" ? (
+                    // <ChevronRightIcon />
+                    <MenuIcon />
+                  ) : open ? (
+                    <ChevronLeftIcon />
+                  ) : (
+                    <MenuIcon />
+                  )}
+                </IconButton>
+              </DrawerHeader>
+              <Divider />
+              <List>
+                {drawerMenuList.map((item, index) => (
+                  <ListItem
+                    key={item.id}
+                    disablePadding
+                    sx={{ display: "block" }}
+                  >
+                    <ListItemButton
+                      onClick={() => handleNavigation(item.label)}
+                      sx={{
+                        minHeight: 48,
+                        justifyContent: open ? "initial" : "center",
+                        px: 2.5,
+                      }}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : "auto",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {item.icon}
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={item.label}
+                        sx={{ opacity: open ? 1 : 0 }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+              <Divider />
+              <List>
+                {["All mail", "Trash", "Spam"].map((text, index) => (
+                  <ListItem key={text} disablePadding sx={{ display: "block" }}>
+                    <ListItemButton
+                      sx={{
+                        minHeight: 48,
+                        justifyContent: open ? "initial" : "center",
+                        px: 2.5,
+                      }}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : "auto",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={text}
+                        sx={{ opacity: open ? 1 : 0 }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </Drawer>
+            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+              <DrawerHeader />
 
-        {current === "Home" && (
-          <AnimationRevealPage direction={"left"}>
-            <Overview />
-          </AnimationRevealPage>
-        )}
+              {current === "Home" && (
+                <AnimationRevealPage direction={"left"}>
+                  <Overview />
+                </AnimationRevealPage>
+              )}
 
-        {current === "Client" && (
-          <AnimationRevealPage direction={"right"}>
-            <ClientOverview />
-          </AnimationRevealPage>
-        )}
-      </Box>
-    </Box>
+              {current === "Client" && (
+                <AnimationRevealPage direction={"right"}>
+                  <ClientOverview />
+                </AnimationRevealPage>
+              )}
+            </Box>
+          </Box>
+        </>
+      ) : (
+        <Box>
+          <ClientDashboard />
+        </Box>
+      )}
+    </>
+
     // </AnimationRevealPage>
   );
 };

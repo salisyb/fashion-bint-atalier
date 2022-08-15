@@ -1,6 +1,7 @@
 import * as React from "react";
 // import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
+
 // import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import {
@@ -33,6 +34,9 @@ import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { useDispatch, useSelector } from "react-redux";
 import { createClientOrder, getClientMeasurement } from "api/clients.api";
 import { minHeight } from "@mui/system";
+import moment from "moment";
+import { setOrders, addOrders } from "store/auth";
+import CircularProgress from "@mui/material/CircularProgress";
 
 // import { LocalizationProvider } from "@mui/x-date-pickers";
 
@@ -76,6 +80,8 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
 
   const { clients, token } = useSelector((state) => state.auth);
 
+  const [loading, setLoading] = React.useState(false);
+
   const handleSetClient = async (e) => {
     setClient(e.target.value);
 
@@ -87,13 +93,33 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
     console.log(client);
   };
 
-  const handleRegisterClient = async (form) => {
-    const data = await createClientOrder(
-      { ...form, collection_date: value.format("YYYY/MM/DD"), client: client },
-      token
-    );
+  const handleRegisterClientOrder = async (form) => {
+    let orderForm = {};
+    setLoading(true);
 
-    console.log(data);
+    try {
+      orderForm = {
+        ...form,
+        collection_date: value.format("YYYY-MM-DD"),
+        client: client,
+      };
+    } catch (error) {
+      const cd = moment(value);
+      orderForm = {
+        ...form,
+        collection_date: cd.format("YYYY-MM-DD"),
+        client: client,
+      };
+    }
+
+    const data = await createClientOrder(orderForm, token);
+
+    if (data) {
+      dispatch(addOrders(data));
+    }
+
+    setLoading(false);
+    onSubmit();
   };
 
   return (
@@ -102,7 +128,7 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
         // validationSchema={addNewClientSchema}
         initialValues={initialState}
         onSubmit={(data) => {
-          handleRegisterClient(data);
+          handleRegisterClientOrder(data);
         }}
       >
         {({
@@ -243,7 +269,7 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
                 sx={{ width: "100%" }}
                 onClick={handleSubmit}
               >
-                Submit order
+                {loading ? <CircularProgress /> : "Submit order"}
               </Button>
             </Box>
           </Form>
@@ -460,7 +486,7 @@ export default function OverviewDashboard() {
         break;
 
       case "add new order":
-        setSelectedOption(<AddNewOrder />);
+        setSelectedOption(<AddNewOrder onSubmit={handleCloseModal} />);
         setTitle("Add New Order");
         handleCloseModal();
         break;
