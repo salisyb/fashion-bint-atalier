@@ -89,7 +89,7 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
 
   const handleRegisterClient = async (form) => {
     const data = await createClientOrder(
-      { ...form, collection_date: value.format(), client: client },
+      { ...form, collection_date: value.format("YYYY/MM/DD"), client: client },
       token
     );
 
