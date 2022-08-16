@@ -43,29 +43,29 @@ const SvgDotPattern4 = tw(
 export default () => {
   const cards = [
     {
-      imageSrc: "https://i.postimg.cc/mDjtkByN/slide-1.png",
-      subtitle: "Tailoring",
-      title: "BRIDAL OUTFIT",
+      imageSrc: "https://i.postimg.cc/wjG2BYKg/first-picture.jpg",
+      subtitle: "Bint Atelier",
+      title: "BRIDAL ATTIRE",
       description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "At Bint Atelier we make astonishing Bridal wears for Bridal Shower, Cocktail Party, Traditional Wedding, Dinner e.t.c, we provide Bridal Consultation to our brides for fabric sourcing, styles selection and bringing their dreams into reality through sketches.",
       url: "https://timerse.com",
     },
 
     {
-      imageSrc: "https://i.postimg.cc/Y9MvthYC/slide-2.png",
-      subtitle: "Tailoring",
-      title: "BRIDAL OUTFIT",
+      imageSrc: "https://i.postimg.cc/CKzjmhxN/second-picture.jpg",
+      subtitle: "Bint atelier",
+      title: "CASUAL ATTIRE",
       description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "At Bint Atelier we have professional tailors that work with utmost care and fashion Knowledge, we make sure we provide you with the best dresses that will make you stand out in public. We boost your confidence through your dresses,",
       url: "https://timerse.com",
     },
 
     {
-      imageSrc: "https://i.postimg.cc/VNjSyjSh/slide-3.png",
-      subtitle: "Tailoring",
-      title: "CASUAL OUTFIT",
+      imageSrc: "https://i.postimg.cc/brHbsdmz/third-image.jpg",
+      subtitle: "Bint Atelier",
+      title: "WEDDING DRESSES",
       description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "At Bint Atelier we make outstanding and breathtaking wedding dresses with beautiful creations and perfections to make sure you are not left out.",
       url: "https://timerse.com",
     },
   ];

@@ -1,6 +1,7 @@
 import React from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
+import { Stack, Box } from "@mui/material";
 
 // import { css } from "styled-components/macro"; //eslint-disable-line
 import AnimatedText from "react-animated-text-content";
@@ -8,7 +9,6 @@ import AnimatedText from "react-animated-text-content";
 
 import DefaultHeader from "../headers/CenteredHeader";
 // import { logout } from "store/auth.js";
-import { Image, VStack } from "@chakra-ui/react";
 // import TwoColumnWithInput from "./TwoColumnWithInput.js";
 
 // const logoImage = "../../images/bint_logo.png";
@@ -26,8 +26,9 @@ import { Image, VStack } from "@chakra-ui/react";
 // const PrimaryLink = tw(PrimaryLinkBase)`rounded-full ml-2`;
 const Container = styled.div`
   ${tw`relative -mx-8 -mt-8 bg-center bg-cover h-screen min-h-144`}
-  background-image: url("https://unsplash.com/photos/yXZ8PKZFrIE/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjU5MjQ1NDEz&force=true");
+  background-color: black
 `;
+// url("https://unsplash.com/photos/yXZ8PKZFrIE/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjU5MjQ1NDEz&force=true");
 
 const OpacityOverlay = tw.div`z-10 absolute inset-0 bg-black opacity-75`;
 
@@ -51,7 +52,7 @@ const TextAnimated = ({ children, reload }) => {
   return (
     <>
       <br />
-      <span style={{ color: "red" }}>Fashion</span>
+      <span style={{ color: "#E1AD01 " }}>Fashion</span>
 
       <AnimatedText
         type="words" // animate words or chars
@@ -117,19 +118,24 @@ export default () => {
         {/* <StyledHeader links={navLinks} /> */}
         <DefaultHeader />
         <Content>
-          <VStack alignContent={"center"}>
-            <Image
-              boxSize="200px"
-              objectFit="cover"
-              src={"https://i.postimg.cc/t45cxYc5/bint-logo.png"}
-              alt={"company logo"}
-            />
+          <Stack display="flex" alignItems={"center"} justifyContent="center">
+            <Box sx={{ marginBottom: { xs: "100px", sm: "0px" } }}>
+              <img
+                boxSize="200px"
+                width={"200px"}
+                objectFit="cover"
+                src={"https://i.postimg.cc/t45cxYc5/bint-logo.png"}
+                alt={"company logo"}
+              />
+            </Box>
             <Heading>
               <TextAnimated reload={counter}>{services[counter]}</TextAnimated>
             </Heading>
 
-            <PrimaryAction onClick={handleReload}>Contact Us</PrimaryAction>
-          </VStack>
+            <PrimaryAction onClick={() => console.log("hello")}>
+              Contact Us
+            </PrimaryAction>
+          </Stack>
         </Content>
       </HeroContainer>
     </Container>

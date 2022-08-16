@@ -9,7 +9,6 @@ import { PrimaryButton as PrimaryButtonBase } from "components/misc/Buttons";
 // import { ReactComponent as StarIcon } from "feather-icons/dist/icons/star.svg";
 import { ReactComponent as ChevronLeftIcon } from "feather-icons/dist/icons/chevron-left.svg";
 import { ReactComponent as ChevronRightIcon } from "feather-icons/dist/icons/chevron-right.svg";
-import { Image } from "@chakra-ui/react";
 
 const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-16 lg:py-20`;
@@ -293,10 +292,11 @@ export default () => {
                   overflow: "hidden",
                 }}
               >
-                <Image
+                <img
                   src={card.imageSrc}
                   width="100%"
                   height="100%"
+                  alt={"display logo"}
                   borderTopStartRadius={40}
                   borderBottomEndRadius={40}
                 />

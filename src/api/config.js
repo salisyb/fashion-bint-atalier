@@ -7,6 +7,6 @@ import { create } from "apisauce";
 // });
 
 export const api = create({
-  baseURL: "http://localhost:8000",
+  baseURL: "http://192.168.0.124:8000",
   headers: { Accept: "application/json" },
 });
