@@ -111,3 +111,23 @@ export const getListOfOrder = async (token) => {
   console.log(res.problem);
   return [];
 };
+
+export const updateOrderInformation = async (orderId, data, token) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  if (token) {
+    config.headers.Authorization = `Token ${token}`;
+  }
+
+  const res = await api.put(`/api/v1/auth/order/${orderId}/`, data, config);
+
+  if (res.ok) {
+    return res.data;
+  }
+
+  return false;
+};

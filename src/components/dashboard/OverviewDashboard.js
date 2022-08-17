@@ -1,6 +1,7 @@
 import * as React from "react";
 // import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
+import ReactToPrint, { useReactToPrint } from "react-to-print";
 
 // import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -32,11 +33,19 @@ import Button from "@mui/material/Button";
 import PlusIcon from "@mui/icons-material/ControlPoint";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { useDispatch, useSelector } from "react-redux";
-import { createClientOrder, getClientMeasurement } from "api/clients.api";
+import {
+  createClientOrder,
+  getClientMeasurement,
+  getListOfOrder,
+  updateOrderInformation,
+} from "api/clients.api";
 import { minHeight } from "@mui/system";
 import moment from "moment";
 import { setOrders, addOrders } from "store/auth";
 import CircularProgress from "@mui/material/CircularProgress";
+import OneComponentPrint from "./InvoicePrintOne";
+
+import MarkComponentPrint from "./InvoicePrintMany";
 
 // import { LocalizationProvider } from "@mui/x-date-pickers";
 
@@ -279,177 +288,500 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
   );
 };
 
-const ViewEditOrder = ({ data }) => {
-  return (
-    <Box
-      sx={{
-        minWidth: { xs: "xs" },
-      }}
-    >
-      {/* order detail */}
-      <>
-        <Divider>
-          <Chip label="ORDER DETAIL" />
-        </Divider>
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              my: "10px",
-            }}
-          >
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              Client Name
-            </Typography>
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              {data.client.first_name} {data.client.last_name}
-            </Typography>
-          </Box>
-          <Divider />
-        </>
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              my: "10px",
-            }}
-          >
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              Client Email
-            </Typography>
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              {data.client.email}
-            </Typography>
-          </Box>
-          <Divider />
-        </>
+class ComponentToPrint extends React.Component {
+  render() {
+    const data = this.props.data;
 
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              my: "10px",
-            }}
-          >
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              Number of Attire
-            </Typography>
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              {data.no_of_attire}
-            </Typography>
-          </Box>
-          <Divider />
-        </>
-
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              my: "10px",
-            }}
-          >
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              Style
-            </Typography>
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              {data.style}
-            </Typography>
-          </Box>
-          <Divider />
-        </>
-
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              my: "10px",
-            }}
-          >
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              Description
-            </Typography>
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              {data.description}
-            </Typography>
-          </Box>
-          <Divider />
-        </>
-
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              my: "10px",
-            }}
-          >
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              Collection Date
-            </Typography>
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              {data.collection_date}
-            </Typography>
-          </Box>
-          <Divider />
-        </>
-
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              my: "10px",
-            }}
-          >
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              Amount
-            </Typography>
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              ₦{data.amount}
-            </Typography>
-          </Box>
-          <Divider />
-        </>
-      </>
-
-      {/* measurement detail */}
-      <>
-        <Divider sx={{ marginTop: "30px" }}>
-          <Chip label="MEASUREMENT DETAIL" />
-        </Divider>
-        <Box></Box>
-      </>
-
-      <>
+    return (
+      <Box
+        sx={{
+          minWidth: { xs: "xs" },
+          paddingX: "100px",
+        }}
+      >
         <Box
           sx={{
+            width: "100%",
             display: "flex",
-            justifyContent: "space-between",
-            my: "10px",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-            Measurement Name
-          </Typography>
-          <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-            {data.measurement.measurement_owner}
-          </Typography>
+          <img
+            src="https://i.postimg.cc/gkB8x8yd/ff85e82c-e25b-4913-b13f-09bbae1b1e36-removebg-preview.png"
+            alt="display-logo"
+            width={200}
+          />
         </Box>
-        <Divider />
-      </>
+        {/* order detail */}
+        <>
+          <Divider>
+            <Chip label="ORDER DETAIL" />
+          </Divider>
 
-      <Box marginTop={"40px"} spacing={2}>
-        <Button variant="outlined" sx={{ marginRight: "10px" }}>
-          Edit
-        </Button>
-        <Button variant="outlined">Generate Invoice</Button>
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Number of Attire
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                {data.no_of_attire}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Style
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                {data.style}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Description
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                {data.description}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Collection Date
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                {data.collection_date}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Status of order
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                {data.status}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Amount
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                ₦{data.amount}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+        </>
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              my: "10px",
+            }}
+          >
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              Amount Paid
+            </Typography>
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              ₦{data.amount_paid}
+            </Typography>
+          </Box>
+          <Divider />
+        </>
+
+        {/* measurement detail */}
+        <>
+          <Divider sx={{ marginTop: "30px" }}>
+            <Chip label="MEASUREMENT DETAIL" />
+          </Divider>
+          <Box></Box>
+        </>
+
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              my: "10px",
+            }}
+          >
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              Measurement Name
+            </Typography>
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              {data.measurement.measurement_owner}
+            </Typography>
+          </Box>
+          <Divider />
+        </>
+
+        {/* <Box marginTop={"40px"} spacing={2}>
+        <ReactToPrint
+          trigger={() => <Button variant="outlined">Generate Invoice</Button>}
+          content={() => componentRef}
+        />
+      </Box> */}
       </Box>
-    </Box>
+    );
+  }
+}
+
+const ViewEditOrder = ({ data, onClose }) => {
+  let componentRef = React.useRef();
+
+  const [edit, setEdit] = React.useState(false);
+  const { token } = useSelector((state) => state.auth);
+
+  const [status, setState] = React.useState(data.status);
+  const [amount_paid, setAmountPaid] = React.useState(data.amount_paid);
+  const [loading, setLoading] = React.useState(false);
+
+  const toggleEdit = () => setEdit(!edit);
+
+  const handleSaveEdit = async () => {
+    setLoading(true);
+    // update the order information
+
+    const response = await updateOrderInformation(
+      data.id,
+      { ...data, status, amount_paid },
+      token
+    );
+
+    // console.log(response);
+    setLoading(false);
+    toggleEdit();
+    onClose();
+  };
+
+  return (
+    <>
+      <Box
+        sx={{
+          minWidth: { xs: "xs" },
+        }}
+      >
+        {/* order detail */}
+        <>
+          <Divider>
+            <Chip label="ORDER DETAIL" />
+          </Divider>
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Client Name
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                {data.client.first_name} {data.client.last_name}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Client Email
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                {data.client.email}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Number of Attire
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                {data.no_of_attire}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Style
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                {data.style}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Description
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                {data.description}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Collection Date
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                {data.collection_date}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Status of order
+              </Typography>
+
+              {!edit ? (
+                <Typography
+                  sx={{
+                    fontSize: { xs: "12px", sm: "18px" },
+                    color: status === "Completed" ? "green" : "yellow",
+                  }}
+                >
+                  {status}
+                </Typography>
+              ) : (
+                <TextField
+                  type="text"
+                  placeholder="Status of order"
+                  value={status}
+                  onChange={(e) => setState(e.target.value)}
+                  size="small"
+                />
+              )}
+            </Box>
+            <Divider />
+          </>
+
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Amount
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                ₦{data.amount}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+        </>
+
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              my: "10px",
+            }}
+          >
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              Amount Paid
+            </Typography>
+
+            {!edit ? (
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                ₦{amount_paid}
+              </Typography>
+            ) : (
+              <TextField
+                type="text"
+                placeholder="Amount paid"
+                value={amount_paid}
+                onChange={(e) => setAmountPaid(e.target.value)}
+                size="small"
+              />
+            )}
+          </Box>
+          <Divider />
+        </>
+
+        {/* measurement detail */}
+        <>
+          <Divider sx={{ marginTop: "30px" }}>
+            <Chip label="MEASUREMENT DETAIL" />
+          </Divider>
+          <Box></Box>
+        </>
+
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              my: "10px",
+            }}
+          >
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              Measurement Name
+            </Typography>
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              {data.measurement.measurement_owner}
+            </Typography>
+          </Box>
+          <Divider />
+        </>
+
+        {/* <Box marginTop={"40px"} spacing={2}>
+        
+      </Box> */}
+
+        <Box marginTop={"40px"} spacing={2}>
+          {!edit ? (
+            <Button
+              variant="outlined"
+              onClick={toggleEdit}
+              sx={{ marginRight: "10px" }}
+            >
+              Edit
+            </Button>
+          ) : (
+            <>
+              {!loading && (
+                <Button
+                  variant="outlined"
+                  onClick={toggleEdit}
+                  sx={{ marginRight: "10px" }}
+                >
+                  Cancel
+                </Button>
+              )}
+              <Button
+                onClick={handleSaveEdit}
+                variant="outlined"
+                sx={{ marginRight: "10px" }}
+                disabled={loading}
+              >
+                {loading ? <CircularProgress size={22} /> : "Save"}
+              </Button>
+            </>
+          )}
+          {/* <ReactToPrint
+          trigger={() => <Button variant="outlined">Generate Invoice</Button>}
+          content={() => componentRef}
+        /> */}
+        </Box>
+
+        <div style={{ display: "none" }}>
+          <OneComponentPrint data={data} ref={(el) => (componentRef = el)} />
+        </div>
+      </Box>
+    </>
   );
 };
 
@@ -469,18 +801,42 @@ const imageUrl =
   "https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80";
 
 export default function OverviewDashboard() {
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.auth);
+
   const [modalOpen, setModalOpen] = React.useState(false);
-  const handleCloseModal = () => setModalOpen(!modalOpen);
+  const handleCloseModal = () => {
+    getOrders();
+    setModalOpen(!modalOpen);
+  };
+
+  let componentRef = React.useRef();
 
   const [selectedOption, setSelectedOption] = React.useState(null);
   const [title, setTitle] = React.useState("");
 
   const { order } = useSelector((state) => state.auth);
+  const [markedOrder, setMarkedOrder] = React.useState([]);
+
+  React.useEffect(() => {
+    getOrders();
+  }, []);
+
+  const getOrders = async () => {
+    const orders = await getListOfOrder(token);
+
+    if (orders.length > 0) {
+      console.log(orders);
+      dispatch(setOrders(orders));
+    }
+  };
 
   const handleOpenModal = (from, data = null) => {
     switch (from) {
       case "view edit order":
-        setSelectedOption(<ViewEditOrder data={data} />);
+        setSelectedOption(
+          <ViewEditOrder data={data} onClose={handleCloseModal} />
+        );
         setTitle("Order information");
         handleCloseModal();
         break;
@@ -496,77 +852,166 @@ export default function OverviewDashboard() {
     }
   };
 
+  const generateInvoice = () => {
+    handlePrint();
+  };
+
+  const pageStyle = `
+  @page {
+    size: 320mm 397mm;
+  }
+
+  @media all {
+    .pagebreak {
+      display: none;
+    }
+  }
+
+  @media print {
+    .pagebreak {
+      page-break-before: always;
+    }
+  }
+`;
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    pageStyle: pageStyle,
+  });
+
+  const handleOnMark = (order) => {
+    const mOrder = markedOrder.filter((item) => item.id === order.id);
+
+    if (mOrder.length < 1) {
+      setMarkedOrder([...markedOrder, order]);
+      return;
+    }
+
+    const newOrder = markedOrder.filter((item) => order.id !== item.id);
+    setMarkedOrder(newOrder);
+  };
+
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      {/* <Typography variant={'h6'}>Welcome to dashboard</Typography> */}
-      <Modal isOpen={modalOpen} onClose={handleCloseModal} title={title}>
-        {selectedOption}
-      </Modal>
-      <Grid container spacing={2}>
-        <Grid container spacing={2}>
-          <CardGrid
+    <>
+      {markedOrder.length > 0 && (
+        <>
+          <div
             style={{
-              display: "flex",
-              // justifyContent: "center",
-              alignItems: "center",
+              display: "none",
+              position: "absolute",
+              height: "100vh",
+              width: "100vw",
             }}
           >
-            <div
+            <MarkComponentPrint data={markedOrder} ref={componentRef} />
+          </div>
+        </>
+      )}
+      <Box sx={{ flexGrow: 1 }}>
+        {/* <Typography variant={"h6"}>Welcome to dashboard</Typography> */}
+        <Modal isOpen={modalOpen} onClose={handleCloseModal} title={title}>
+          {selectedOption}
+        </Modal>
+        <Grid container spacing={2}>
+          <Grid container spacing={2}>
+            <CardGrid
               style={{
-                height: "100%",
-                width: "30%",
-                overflow: "hidden",
-                borderRadius: "10px",
-                marginRight: "20px",
+                display: "flex",
+                // justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              <img
-                src={imageUrl}
-                style={{ position: "relative" }}
-                width={"100%"}
-                alt={"Icon "}
-              />
-            </div>
-            <Typography variant={"h6"} sx={{ color: "white" }}>
-              Order Information
-            </Typography>
-          </CardGrid>
-        </Grid>
-        <Grid container spacing={2}>
-          <Box px={2} pt={4} pb={2}>
-            <Button
-              variant="contained"
-              endIcon={<PlusIcon />}
-              sx={{ px: 4, py: 2 }}
-              color={"secondary"}
-              onClick={() => handleOpenModal("add new order")}
-            >
-              New Order
-            </Button>
-          </Box>
-        </Grid>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={12} md={20}>
-            <div
-              style={{
-                backgroundColor: "#191c24",
-                // height: "100px",
-                borderRadius: "6px",
-                padding: "20px",
-              }}
-            >
-              <Typography variant={"p"} color={"white"}>
-                Order status
+              <div
+                style={{
+                  height: "100%",
+                  width: "30%",
+                  overflow: "hidden",
+                  borderRadius: "10px",
+                  marginRight: "20px",
+                }}
+              >
+                <img
+                  src={imageUrl}
+                  style={{ position: "relative" }}
+                  width={"100%"}
+                  alt={"Icon "}
+                />
+              </div>
+              <Typography variant={"h6"} sx={{ color: "white" }}>
+                Order Information
               </Typography>
-              <TableOrder
-                onRowClick={handleOpenModal}
-                tableHeader={["Client Name", "Order Number"]}
-                tableContent={order}
-              />
-            </div>
+            </CardGrid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Box
+              width={"100%"}
+              px={2}
+              pt={4}
+              pb={2}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                flexDirection: { xs: "column", sm: "row" },
+              }}
+            >
+              <Button
+                variant="contained"
+                endIcon={<PlusIcon />}
+                // sx={{ px: 4, py: 2 }}
+                color={"secondary"}
+                sx={{ width: { xs: "100%", sm: "200px" }, height: "40px" }}
+                onClick={() => handleOpenModal("add new order")}
+              >
+                New Order
+              </Button>
+              {markedOrder.length > 0 && (
+                <Box
+                  sx={{
+                    width: { xs: "100%", sm: "200px" },
+                    marginTop: { xs: "10px", sm: "" },
+                  }}
+                >
+                  {/* <ReactToPrint
+                  pageStyle={pageStyle}
+                  trigger={() => ( */}
+                  <Button
+                    onClick={generateInvoice}
+                    sx={{ width: "100%" }}
+                    variant="outlined"
+                  >
+                    Generate Invoice
+                  </Button>
+                  {/* )}
+                  content={() => componentRef}
+                /> */}
+                </Box>
+              )}
+            </Box>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={12} md={20}>
+              <div
+                style={{
+                  backgroundColor: "#191c24",
+                  // height: "100px",
+                  borderRadius: "6px",
+                  padding: "20px",
+                }}
+              >
+                <Typography variant={"p"} color={"white"}>
+                  Order status
+                </Typography>
+                <TableOrder
+                  onRowClick={handleOpenModal}
+                  tableHeader={["Client Name", "Mark"]}
+                  tableContent={order}
+                  onMark={handleOnMark}
+                />
+              </div>
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </>
   );
 }

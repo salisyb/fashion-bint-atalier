@@ -6,13 +6,15 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Checkbox from "@mui/material/Checkbox";
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories };
-}
-
-export default function BasicTable({ onRowClick, tableHeader, tableContent }) {
-  console.log(tableContent);
+export default function BasicTable({
+  onRowClick,
+  tableHeader,
+  tableContent,
+  mark = false,
+  onMark,
+}) {
   return (
     <TableContainer component={Paper}>
       <Table
@@ -32,7 +34,6 @@ export default function BasicTable({ onRowClick, tableHeader, tableContent }) {
         <TableBody>
           {tableContent.map((row) => (
             <TableRow
-              onClick={() => onRowClick("view edit order", row)}
               key={row.id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
@@ -40,12 +41,17 @@ export default function BasicTable({ onRowClick, tableHeader, tableContent }) {
                 component="th"
                 scope="row"
                 sx={{ align: "left", color: "#6c7293" }}
+                onClick={() => onRowClick("view edit order", row)}
               >
                 {`${row.client.first_name} ${row.client.last_name}`}
               </TableCell>
               <TableCell sx={{ align: "left", color: "#6c7293" }}>
                 {/* {row.clientsinformation && row.clientsinformation.phone_number} */}
-                {Math.floor(Math.random() * 1000000000)}
+                {/* {Math.floor(Math.random() * 1000000000)} */}
+                <Checkbox
+                  onChange={() => onMark(row)}
+                  {...{ inputProps: { "aria-label": "Checkbox demo" } }}
+                />
               </TableCell>
             </TableRow>
           ))}
