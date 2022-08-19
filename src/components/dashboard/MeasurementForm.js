@@ -59,7 +59,15 @@ export default function MeasurementForm({
   const [loading, setLoading] = React.useState(false);
 
   const handleAddMeasurement = async (measurement) => {
+    if (measurement.measurement_owner === "") {
+      alert("You need to set a measurement owner");
+      return;
+    }
     setLoading(true);
+    console.log({
+      owner: userData.id,
+      ...measurement,
+    });
     const data = await createClientMeasurement(
       {
         owner: userData.id,
@@ -94,7 +102,7 @@ export default function MeasurementForm({
 
   return (
     <Formik
-      validationSchema={addClientMeasurement}
+      // validationSchema={addClientMeasurement}
       initialValues={form}
       onSubmit={(e) => handleAddMeasurement(e)}
     >

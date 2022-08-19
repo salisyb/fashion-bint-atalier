@@ -18,14 +18,26 @@ import {
   Typography,
 } from "@mui/material";
 import CurrencyFormat from "react-currency-format";
+import moment from "moment";
 
 // import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 const ComponentToPrint = React.forwardRef(({ data }, ref) => {
   const initialAmount = 0;
+
   const totalBalance = data.reduce(
-    (initialAmount, item) => initialAmount + Number(item.amount),
+    (initialAmount, item) =>
+      initialAmount +
+      (Number(item.amount) * Number(item.no_of_attire) -
+        (item.discount ? Number(item.discount) : 0)),
     initialAmount
+  );
+
+  const initialPaidAmount = 0;
+
+  const totalAmountPaid = data.reduce(
+    (initialAmount, item) => initialAmount + Number(item.amount_paid),
+    initialPaidAmount
   );
 
   return (
@@ -33,7 +45,7 @@ const ComponentToPrint = React.forwardRef(({ data }, ref) => {
       ref={ref}
       sx={{
         minWidth: { xs: "xs" },
-        paddingX: "200px",
+        marginX: "200px",
       }}
     >
       <Box
@@ -47,20 +59,25 @@ const ComponentToPrint = React.forwardRef(({ data }, ref) => {
         }}
       >
         <img
-          src="https://i.postimg.cc/gkB8x8yd/ff85e82c-e25b-4913-b13f-09bbae1b1e36-removebg-preview.png"
+          // src="https://i.postimg.cc/gkB8x8yd/ff85e82c-e25b-4913-b13f-09bbae1b1e36-removebg-preview.png"
+          src="https://i.postimg.cc/k5rBJF7j/ff85e82c-e25b-4913-b13f-09bbae1b1e36.jpg"
           alt="display-logo"
           width={200}
         />
-        <Box textAlign="right">
+        <Box textAlign="right" width="400px">
           <Typography fontSize="26px">Invoice</Typography>
           <Typography fontSize="20px" fontWeight="600">
-            Bint Atelier
+            Bint Atelier Enterprises
           </Typography>
-          <Typography>No 1234 the address of bint atelier </Typography>
+          <Typography>
+            No 454 Karkasara Adljacent MGK pharmacy before Masallachin Bilal,
+            Kano, Nigeria
+          </Typography>
           <Typography>Kano Kano</Typography>
           <Typography>NG</Typography>
-          <Typography>07098483921</Typography>
-          <Typography>bintatelier@bint.com</Typography>
+          <Typography>07046660046</Typography>
+          <Typography>Bintatelier@gmail.com</Typography>
+          <Typography>Tax Reg No. : BN 3077315</Typography>
         </Box>
       </Box>
 
@@ -89,18 +106,92 @@ const ComponentToPrint = React.forwardRef(({ data }, ref) => {
           </>
         </> */}
 
-      <Box sx={{ backgroundColor: "#E1AD01", px: "20px", py: "20px" }}>
-        <>
+      <Box
+        sx={{
+          backgroundColor: "#f0f3f4",
+          px: "20px",
+          py: "20px",
+          my: "20px",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box>
           <Typography>BILL TO:</Typography>
           <Typography>
             {data[0].client &&
               data[0].client.first_name + " " + data[0].client.last_name}
           </Typography>
-        </>
+        </Box>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          width="35%"
+          // backgroundColor=""
+        >
+          <Box textAlign="right">
+            <Typography>Invoice #</Typography>
+            <Typography>Date</Typography>
+            <Typography>Collection Date</Typography>
+          </Box>
+          <Box textAlign="right">
+            <Typography>{Math.floor(Math.random() * 10000000)}</Typography>
+            <Typography>{moment().format("MMM D YYYY")}</Typography>
+            <Typography>
+              {moment(data[0].collection_date).format("MMM D YYYY")}
+            </Typography>
+          </Box>
+        </Box>
       </Box>
 
       <CustomizedTables data={data} />
+      <Box display="flex" justifyContent="space-between" mt="20px">
+        {/* payment instruction */}
+        <Box>
+          <Typography fontWeight="600">Payment Instruction</Typography>
+          <Typography>Account Number: 1017522000</Typography>
+          <Typography>Bank Name: Zenith Bank</Typography>
+          <Typography>Account Name: Bint Atelier Enterprises</Typography>
+        </Box>
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="space-between"
+        >
+          <Typography>
+            Subtotal{" "}
+            <CurrencyFormat
+              value={totalBalance}
+              displayType={"text"}
+              thousandSeparator={true}
+              prefix={"₦"}
+            />
+          </Typography>
+          <Typography>
+            Total{" "}
+            <CurrencyFormat
+              value={totalBalance}
+              displayType={"text"}
+              thousandSeparator={true}
+              prefix={"₦"}
+            />
+          </Typography>
+          <Typography>
+            Amount Paid{" "}
+            <CurrencyFormat
+              value={totalAmountPaid}
+              displayType={"text"}
+              thousandSeparator={true}
+              prefix={"₦"}
+            />
+          </Typography>
+          <Divider />
+        </Box>
 
+        {/* total amount */}
+      </Box>
       <Box
         sx={{
           mt: "20px",
@@ -110,11 +201,11 @@ const ComponentToPrint = React.forwardRef(({ data }, ref) => {
           justifyContent: "flex-end",
         }}
       >
-        <Box sx={{ backgroundColor: "#E1AD01", px: "30px", py: "20px" }}>
-          <Typography>Total Balance</Typography>
-          <Typography sx={{ fontWeight: "600", fontSize: "30px" }}>
+        <Box sx={{ backgroundColor: "#f0f3f4", px: "30px", py: "20px" }}>
+          <Typography>Amount Due</Typography>
+          <Typography sx={{ fontWeight: "400", fontSize: "30px" }}>
             <CurrencyFormat
-              value={totalBalance}
+              value={totalBalance - totalAmountPaid}
               displayType={"text"}
               thousandSeparator={true}
               prefix={"₦"}
@@ -124,18 +215,65 @@ const ComponentToPrint = React.forwardRef(({ data }, ref) => {
       </Box>
 
       <Box mt="30px">
-        <Typography>Dear Esteemed Client</Typography>
-        <Typography mb="20px">
-          You are either to pay 50% deposit or full payment of your service
-          charge before we start processing making your outfits, Please do send
-          Proof of Payment Thank you
+        <Typography fontWeight="600">Dear Esteemed Client</Typography>
+        <Typography mb="10px" fontWeight="600">
+          You are to either pay 50% deposit or full payment of your service
+          charge to enable us to start processing your outfits. Please send
+          Proof of Payment to enable us serve you better. Charges of N2000
+          applies 3 days after your date of collection. NO REFUND{" "}
+          <span style={{ color: "red", fontWeight: "black" }}>X</span>
+        </Typography>
+        <Typography fontWeight="600" mb="30px">
+          THANK YOU
         </Typography>
 
         {/* account number */}
-        <Typography>Bank Account: 1234567890</Typography>
+        {/* <Typography>Bank Account: 1234567890</Typography>
         <Typography>Bank Name: FCMB</Typography>
-        <Typography mb="30px">Account Name: Bint atelier Enerprises</Typography>
+        <Typography mb="30px">Account Name: Bint atelier Enerprises</Typography> */}
         <Divider />
+        <Typography mb="10px">
+          By making Payment, the customer agrees to the services and condition
+          describe in this document.
+        </Typography>
+
+        <Box
+          mb="70px"
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          paddingX="100px"
+        >
+          {/* bint sign */}
+          <Box display="flex" flexDirection="column" alignItems="center">
+            <Typography textAlign="center" fontSize="20px" fontWeight="600">
+              Bint Atelier Enterprises
+            </Typography>
+            <img
+              src="https://i.postimg.cc/66F6VvPg/bint-sign-removebg-preview.png"
+              width="100px"
+              alt="bint sign"
+            />
+            <Box width="100%" backgroundColor="#cccccc" height="1px" />
+            <Typography textAlign="center">
+              {moment().format("MMM D YYYY")}
+            </Typography>
+          </Box>
+
+          {/* customer sign */}
+          <Box>
+            <Typography
+              textAlign="center"
+              mb="95px"
+              fontSize="20px"
+              fontWeight="600"
+            >
+              Kabir Bappi
+            </Typography>
+            <Divider />
+            <Typography textAlign="center">{"---  ---  ---"}</Typography>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

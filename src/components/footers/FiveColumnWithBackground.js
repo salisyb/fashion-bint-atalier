@@ -130,6 +130,7 @@ export default () => {
             </LinkList>
           </Column>
           <Column>
+            &copy;
             <ColumnHeading>Legal</ColumnHeading>
             <LinkList>
               <LinkListItem>
@@ -154,7 +155,8 @@ export default () => {
             <LogoText>Bint Atelier.</LogoText>
           </LogoContainer>
           <CopywrightNotice>
-            &copy; 2022 PIAS Inc. All Rights Reserved.
+            Bint Atelier © 2022 All rights reserved | Designed and Developed by{" "}
+            <a href="https://unlockarewa.com/">Unlock Arewa</a>
           </CopywrightNotice>
           <SocialLinksContainer>
             <SocialLink href="https://instagram.com/bint_atelier">

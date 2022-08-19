@@ -29,7 +29,7 @@ const addNewClientSchema = yup.object().shape({
     .string()
     .email("Please enter valid email")
     .required("Email Address is Required"),
-  username: yup.string().required("phone number is Required"),
+  username: yup.string().required("username number is Required"),
   phone_number: yup
     .string()
     .required("This field is Required")
@@ -39,12 +39,12 @@ const addNewClientSchema = yup.object().shape({
     ),
   full_name: yup
     .string()
-    .min(8, ({ min }) => `full name must be at least ${min} characters`)
+    .min(4, ({ min }) => `full name must be at least ${min} characters`)
     .required("full name is Required"),
   address: yup.string().required("Client Address is Required"),
   password: yup
     .string()
-    .min(6, ({ min }) => `Password must be at least ${min} characters`)
+    .min(3, ({ min }) => `Password must be at least ${min} characters`)
     .required("Password is required"),
 });
 

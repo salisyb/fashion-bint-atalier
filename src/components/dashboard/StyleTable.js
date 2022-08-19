@@ -15,14 +15,14 @@ export default function BasicTable({ onRowClick, tableHeader, tableContent }) {
   return (
     <TableContainer component={Paper}>
       <Table
-        sx={{ color: "#6c7293" }}
+        sx={{ color: "#E1AD01" }}
         aria-label="simple table"
-        bgColor={"#191c24"}
+        bgColor={"#E1AD01"}
       >
         <TableHead>
           <TableRow>
             {tableHeader.map((header) => (
-              <TableCell key={header} sx={{ color: "#6c7293", align: "left" }}>
+              <TableCell key={header} sx={{ color: "#000000", align: "left" }}>
                 {header}
               </TableCell>
             ))}
@@ -38,11 +38,11 @@ export default function BasicTable({ onRowClick, tableHeader, tableContent }) {
               <TableCell
                 component="th"
                 scope="row"
-                sx={{ align: "left", color: "#6c7293" }}
+                sx={{ align: "left", color: "#000000" }}
               >
                 {`${row.first_name} ${row.last_name}`}
               </TableCell>
-              <TableCell sx={{ align: "left", color: "#6c7293" }}>
+              <TableCell sx={{ align: "left", color: "#000000" }}>
                 {row.clientsinformation && row.clientsinformation.phone_number}
               </TableCell>
             </TableRow>

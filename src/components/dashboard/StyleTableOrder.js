@@ -18,14 +18,14 @@ export default function BasicTable({
   return (
     <TableContainer component={Paper}>
       <Table
-        sx={{ color: "#6c7293" }}
+        sx={{ color: "#E1AD01" }}
         aria-label="simple table"
-        bgColor={"#191c24"}
+        bgColor={"#E1AD01"}
       >
         <TableHead>
           <TableRow>
             {tableHeader.map((header) => (
-              <TableCell key={header} sx={{ color: "#6c7293", align: "left" }}>
+              <TableCell key={header} sx={{ color: "#000000", align: "left" }}>
                 {header}
               </TableCell>
             ))}
@@ -40,12 +40,12 @@ export default function BasicTable({
               <TableCell
                 component="th"
                 scope="row"
-                sx={{ align: "left", color: "#6c7293" }}
+                sx={{ align: "left", color: "#000000" }}
                 onClick={() => onRowClick("view edit order", row)}
               >
                 {`${row.client.first_name} ${row.client.last_name}`}
               </TableCell>
-              <TableCell sx={{ align: "left", color: "#6c7293" }}>
+              <TableCell sx={{ align: "left", color: "#000000" }}>
                 {/* {row.clientsinformation && row.clientsinformation.phone_number} */}
                 {/* {Math.floor(Math.random() * 1000000000)} */}
                 <Checkbox

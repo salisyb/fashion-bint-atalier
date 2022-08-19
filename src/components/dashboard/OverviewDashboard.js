@@ -41,11 +41,13 @@ import {
 } from "api/clients.api";
 import { minHeight } from "@mui/system";
 import moment from "moment";
-import { setOrders, addOrders } from "store/auth";
+import { setOrders, addOrders, getClient } from "store/auth";
 import CircularProgress from "@mui/material/CircularProgress";
 import OneComponentPrint from "./InvoicePrintOne";
 
 import MarkComponentPrint from "./InvoicePrintMany";
+import CurrencyFormat from "react-currency-format";
+import { useHistory } from "react-router-dom";
 
 // import { LocalizationProvider } from "@mui/x-date-pickers";
 
@@ -490,6 +492,7 @@ const ViewEditOrder = ({ data, onClose }) => {
 
   const [status, setState] = React.useState(data.status);
   const [amount_paid, setAmountPaid] = React.useState(data.amount_paid);
+  const [discount, setDiscount] = React.useState(data.discount);
   const [loading, setLoading] = React.useState(false);
 
   const toggleEdit = () => setEdit(!edit);
@@ -500,7 +503,7 @@ const ViewEditOrder = ({ data, onClose }) => {
 
     const response = await updateOrderInformation(
       data.id,
-      { ...data, status, amount_paid },
+      { ...data, status, amount_paid, discount },
       token
     );
 
@@ -623,7 +626,7 @@ const ViewEditOrder = ({ data, onClose }) => {
                 Collection Date
               </Typography>
               <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-                {data.collection_date}
+                {moment(data.collection_date).format("MMM D YYYY")}
               </Typography>
             </Box>
             <Divider />
@@ -662,24 +665,29 @@ const ViewEditOrder = ({ data, onClose }) => {
             </Box>
             <Divider />
           </>
+        </>
 
-          <>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                my: "10px",
-              }}
-            >
-              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-                Amount
-              </Typography>
-              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-                ₦{data.amount}
-              </Typography>
-            </Box>
-            <Divider />
-          </>
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              my: "10px",
+            }}
+          >
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              Price
+            </Typography>
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              <CurrencyFormat
+                value={data.amount}
+                displayType={"text"}
+                thousandSeparator={true}
+                prefix={"₦"}
+              />
+            </Typography>
+          </Box>
+          <Divider />
         </>
 
         <>
@@ -707,6 +715,61 @@ const ViewEditOrder = ({ data, onClose }) => {
                 size="small"
               />
             )}
+          </Box>
+          <Divider />
+        </>
+
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              my: "10px",
+            }}
+          >
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              Discount
+            </Typography>
+
+            {!edit ? (
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                {discount && `₦${discount}`}
+              </Typography>
+            ) : (
+              <TextField
+                type="text"
+                placeholder="Discount"
+                value={discount}
+                onChange={(e) => setDiscount(e.target.value)}
+                size="small"
+              />
+            )}
+          </Box>
+          <Divider />
+        </>
+
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              my: "10px",
+            }}
+          >
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              Total Amount
+            </Typography>
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              <CurrencyFormat
+                value={
+                  Number(data.amount) * Number(data.no_of_attire) -
+                  (data.discount ? data.discount : 0)
+                }
+                displayType={"text"}
+                thousandSeparator={true}
+                prefix={"₦"}
+              />
+            </Typography>
           </Box>
           <Divider />
         </>
@@ -816,10 +879,17 @@ export default function OverviewDashboard() {
   const [title, setTitle] = React.useState("");
 
   const { order } = useSelector((state) => state.auth);
+  const [modalData, setModalData] = React.useState(null);
   const [markedOrder, setMarkedOrder] = React.useState([]);
 
   React.useEffect(() => {
     getOrders();
+  }, []);
+
+  React.useEffect(() => {
+    // get list of client
+
+    dispatch(getClient());
   }, []);
 
   const getOrders = async () => {
@@ -834,15 +904,14 @@ export default function OverviewDashboard() {
   const handleOpenModal = (from, data = null) => {
     switch (from) {
       case "view edit order":
-        setSelectedOption(
-          <ViewEditOrder data={data} onClose={handleCloseModal} />
-        );
+        setSelectedOption("view");
         setTitle("Order information");
+        setModalData(data);
         handleCloseModal();
         break;
 
       case "add new order":
-        setSelectedOption(<AddNewOrder onSubmit={handleCloseModal} />);
+        setSelectedOption("add");
         setTitle("Add New Order");
         handleCloseModal();
         break;
@@ -910,7 +979,15 @@ export default function OverviewDashboard() {
       <Box sx={{ flexGrow: 1 }}>
         {/* <Typography variant={"h6"}>Welcome to dashboard</Typography> */}
         <Modal isOpen={modalOpen} onClose={handleCloseModal} title={title}>
-          {selectedOption}
+          {selectedOption === "view" ? (
+            <ViewEditOrder
+              data={modalData}
+              onSubmit={handleCloseModal}
+              onClose={handleCloseModal}
+            />
+          ) : (
+            <AddNewOrder onSubmit={handleCloseModal} />
+          )}
         </Modal>
         <Grid container spacing={2}>
           <Grid container spacing={2}>
@@ -992,6 +1069,7 @@ export default function OverviewDashboard() {
             <Grid item xs={12} sm={12} md={20}>
               <div
                 style={{
+                  minHeight: "200px",
                   backgroundColor: "#191c24",
                   // height: "100px",
                   borderRadius: "6px",
@@ -1001,12 +1079,26 @@ export default function OverviewDashboard() {
                 <Typography variant={"p"} color={"white"}>
                   Order status
                 </Typography>
-                <TableOrder
-                  onRowClick={handleOpenModal}
-                  tableHeader={["Client Name", "Mark"]}
-                  tableContent={order}
-                  onMark={handleOnMark}
-                />
+                {order.length !== 0 ? (
+                  <TableOrder
+                    onRowClick={handleOpenModal}
+                    tableHeader={["Client Name", "Mark"]}
+                    tableContent={order}
+                    onMark={handleOnMark}
+                  />
+                ) : (
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    padding="40px"
+                  >
+                    <Typography color="white" fontSize="20px">
+                      There is no order yet
+                    </Typography>
+                  </Box>
+                )}
               </div>
             </Grid>
           </Grid>

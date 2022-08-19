@@ -47,6 +47,7 @@ export const createClientMeasurement = async (measurementData, token) => {
   }
 
   console.log(res.problem);
+  console.log(res.data);
   return false;
 };
 

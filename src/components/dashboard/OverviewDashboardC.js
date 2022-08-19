@@ -14,6 +14,26 @@ import BasicModal from "./Modal";
 import Invoice from "./ClientInvoice";
 import ReactPDF from "@react-pdf/renderer";
 import ReactToPrint from "react-to-print";
+import moment from "moment";
+import { FiShoppingCart, FiHome } from "react-icons/fi";
+import CurrencyFormat from "react-currency-format";
+import tw from "twin.macro";
+import styled from "styled-components";
+import {
+  FaInstagram,
+  FaSnapchatGhost,
+  FaWhatsapp,
+  FaTiktok,
+  FaMailBulk,
+} from "react-icons/fa";
+
+const SocialLinksContainer = tw.div`mt-8 md:mt-0 flex`;
+const SocialLink = styled.a`
+  ${tw`cursor-pointer p-2 rounded-full bg-gray-100 text-gray-900 hover:bg-gray-400 transition duration-300 mr-4 last:mr-0`}
+  svg {
+    ${tw`w-4 h-4`}
+  }
+`;
 
 // const ComponentToPrint = ({ data }) => {
 //   return (
@@ -337,7 +357,12 @@ class ComponentToPrint extends React.Component {
                 Amount
               </Typography>
               <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-                ₦{data.amount}
+                <CurrencyFormat
+                  value={data.amount}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  prefix={"₦"}
+                />
               </Typography>
             </Box>
             <Divider />
@@ -355,7 +380,12 @@ class ComponentToPrint extends React.Component {
               Amount Paid
             </Typography>
             <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              ₦{data.amount_paid}
+              <CurrencyFormat
+                value={data.amount_paid}
+                displayType={"text"}
+                thousandSeparator={true}
+                prefix={"₦"}
+              />
             </Typography>
           </Box>
           <Divider />
@@ -493,7 +523,7 @@ const ViewEditOrder = ({ data }) => {
               Collection Date
             </Typography>
             <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              {data.collection_date}
+              {moment(data.collection_date).format("MMM D YYYY")}
             </Typography>
           </Box>
           <Divider />
@@ -513,7 +543,7 @@ const ViewEditOrder = ({ data }) => {
             <Typography
               sx={{
                 fontSize: { xs: "12px", sm: "18px" },
-                color: data.status === "Completed" ? "green" : "yellow",
+                color: data.status === "Completed" ? "green" : "black",
               }}
             >
               {data.status}
@@ -531,10 +561,40 @@ const ViewEditOrder = ({ data }) => {
             }}
           >
             <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              Amount
+              Price
             </Typography>
             <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              ₦{data.amount}
+              <CurrencyFormat
+                value={data.amount}
+                displayType={"text"}
+                thousandSeparator={true}
+                prefix={"₦"}
+              />
+            </Typography>
+          </Box>
+          <Divider />
+        </>
+
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              my: "10px",
+            }}
+          >
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              Discount
+            </Typography>
+            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+              {data.discount && (
+                <CurrencyFormat
+                  value={data.discount}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  prefix={"₦"}
+                />
+              )}
             </Typography>
           </Box>
           <Divider />
@@ -552,7 +612,38 @@ const ViewEditOrder = ({ data }) => {
             Amount Paid
           </Typography>
           <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-            ₦{data.amount_paid}
+            <CurrencyFormat
+              value={data.amount_paid}
+              displayType={"text"}
+              thousandSeparator={true}
+              prefix={"₦"}
+            />
+          </Typography>
+        </Box>
+        <Divider />
+      </>
+
+      <>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            my: "10px",
+          }}
+        >
+          <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+            Total Amount
+          </Typography>
+          <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+            <CurrencyFormat
+              value={
+                Number(data.amount) * Number(data.no_of_attire) -
+                (data.discount ? data.discount : 0)
+              }
+              displayType={"text"}
+              thousandSeparator={true}
+              prefix={"₦"}
+            />
           </Typography>
         </Box>
         <Divider />
@@ -693,7 +784,7 @@ export default function ClientDashboard({}) {
             sx={{
               width: "100%",
               height: "100vh",
-              backgroundColor: "#454242",
+              backgroundColor: "#FFFFFF",
               display: "flex",
               flexDirection: "column",
             }}
@@ -703,28 +794,39 @@ export default function ClientDashboard({}) {
               sx={{
                 width: "100%",
                 height: "70px",
-                backgroundColor: "#383232",
+                backgroundColor: "#E1AD01",
                 display: "flex",
                 alignItems: "center",
                 paddingX: "20px",
+                justifyContent: "space-between",
               }}
             >
-              <Typography color={"white"}>Bint Atelier</Typography>
+              <Typography color={"black"}>Bint Atelier</Typography>
+              <Box>
+                <a href="/">
+                  <FiHome fontSize={"20px"} />
+                </a>
+              </Box>
             </Box>
 
             <Typography
-              color={"white"}
+              color={"black"}
               paddingX="20px"
-              mt="50px"
-              fontSize={"20px"}
+              mt="10px"
               fontWeight="600"
+              sx={{
+                fontSize: { xs: "14px", sm: "20px" },
+              }}
             >
-              Order Details
+              Welcome, {user.first_name} {user.last_name}
             </Typography>
+
             <Box
               sx={{
                 minHeight: "200px",
-                backgroundColor: "#383232",
+                borderTopLeftRadius: "20px",
+                borderTopRightRadius: "20px",
+                backgroundColor: "#E1AD01",
                 mt: "15px",
               }}
             >
@@ -737,14 +839,33 @@ export default function ClientDashboard({}) {
                   alignItems="center"
                   justifyContent="center"
                 >
-                  <Typography color={"white"}>
+                  <Typography color={"black"}>
                     You don't have order with us yet
                   </Typography>
-                  <Typography color={"white"}>CALL 09066424203</Typography>
+                  <Typography color={"black"}>
+                    you can contact us here
+                  </Typography>
+                  <SocialLinksContainer>
+                    <SocialLink href="https://instagram.com/bint_atelier">
+                      <FaInstagram />
+                    </SocialLink>
+                    <SocialLink href="https://www.snapchat.com/add/bint_atelier">
+                      <FaSnapchatGhost />
+                    </SocialLink>
+                    <SocialLink href="https://wa.me/+07046660046">
+                      <FaWhatsapp />
+                    </SocialLink>
+                    <SocialLink href="https://tiktok.com/@bint_atelier">
+                      <FaTiktok />
+                    </SocialLink>
+                    <SocialLink href="bintatelier@gmail.com">
+                      <FaMailBulk />
+                    </SocialLink>
+                  </SocialLinksContainer>
                 </Box>
               ) : (
                 <>
-                  <Box
+                  {/* <Box
                     display="flex"
                     paddingX="20px"
                     justifyContent="space-between"
@@ -753,21 +874,21 @@ export default function ClientDashboard({}) {
                     mb="10px"
                   >
                     <Typography
-                      color={"white"}
+                      color={"black"}
                       fontSize={"18px"}
                       fontWeight="500"
                     >
                       Name
                     </Typography>
                     <Typography
-                      color={"white"}
+                      color={"black"}
                       fontSize={"18px"}
                       fontWeight="500"
                     >
                       Status
                     </Typography>
                   </Box>
-                  <Divider color="white" />
+                  <Divider color="black" /> */}
 
                   {/* list of order data */}
                   {clientOrder.map((order) => (
@@ -775,30 +896,54 @@ export default function ClientDashboard({}) {
                       <Box
                         key={order.id}
                         display="flex"
-                        paddingX="20px"
-                        justifyContent="space-between"
+                        // justifyContent="space-between"
+                        backgroundColor="white"
                         alignItems="center"
                         mt="15px"
                         mb="10px"
+                        padding="10px"
+                        marginX="15px"
+                        borderRadius="10px"
                         sx={{ cursor: "pointer" }}
                         onClick={() => handleOrderClick(order)}
                       >
-                        <Typography
-                          color={"white"}
-                          fontSize={"18px"}
-                          fontWeight="300"
+                        <Box
+                          sx={{
+                            width: "50px",
+                            height: "50px",
+                            borderRadius: "10px",
+                            backgroundColor: "#E1AD01",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
                         >
-                          {order.measurement.measurement_owner}
-                        </Typography>
-                        <Typography
-                          color={"white"}
-                          fontSize={"18px"}
-                          fontWeight="300"
+                          <FiShoppingCart />
+                        </Box>
+                        <Box
+                          display="flex"
+                          justifyContent="space-between"
+                          width="100%"
                         >
-                          {order.status && order.status}
-                        </Typography>
+                          <Typography
+                            color={"black"}
+                            fontSize={"18px"}
+                            fontWeight="600"
+                            marginLeft="10px"
+                          >
+                            {order.style}
+                          </Typography>
+                          <Typography
+                            color={
+                              order.status !== "Pending" ? "green" : "black"
+                            }
+                            fontSize={"18px"}
+                            fontWeight="400"
+                          >
+                            {order.status && order.status}
+                          </Typography>
+                        </Box>
                       </Box>
-                      <Divider color="white" />
                     </>
                   ))}
                 </>
