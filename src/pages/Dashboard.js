@@ -23,19 +23,22 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import ClientIcon from "@mui/icons-material/PeopleAlt";
 import OrderIcon from "@mui/icons-material/ShoppingCart";
 
+import LogoutIcon from "@mui/icons-material/Logout";
+import HomeIcon from "@mui/icons-material/Home";
+
 import Overview from "../components/dashboard/OverviewDashboard";
 import ClientDashboard from "../components/dashboard/OverviewDashboardC";
 import ClientOverview from "../components/dashboard/ClientOverView";
 import { useSelector, useDispatch } from "react-redux";
 import { getListOfOrder } from "api/clients.api";
-import { setOrders } from "store/auth";
+import { logout, setOrders } from "store/auth";
+import { useHistory } from "react-router-dom";
 
 const drawerWidth = 240;
 
 const drawerMenuList = [
   { id: 1, label: "Home", icon: <DashboardIcon /> },
   { id: 2, label: "Client", icon: <ClientIcon /> },
-  { id: 3, label: "Order", icon: <OrderIcon /> },
 ];
 // ["Home", "Client", "Order", "Drafts"]
 
@@ -108,8 +111,18 @@ export default () => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [current, setCurrent] = React.useState("Home");
-
+  const history = useHistory();
   const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    history.push("/");
+  };
+
+  const handleGoHome = () => {
+    history.push("/");
+  };
+
   const { token, user } = useSelector((state) => state.auth);
 
   const handleCloseDrawer = () => {
@@ -210,10 +223,18 @@ export default () => {
                 ))}
               </List>
               <Divider />
-              <List>
-                {["All mail", "Trash", "Spam"].map((text, index) => (
+              <List backgroundColor="red">
+                {["Home", "LogOut"].map((text, index) => (
                   <ListItem key={text} disablePadding sx={{ display: "block" }}>
                     <ListItemButton
+                      onClick={() => {
+                        if (index % 2 === 0) {
+                          handleGoHome();
+                          return;
+                        }
+
+                        handleLogout();
+                      }}
                       sx={{
                         minHeight: 48,
                         justifyContent: open ? "initial" : "center",
@@ -227,7 +248,7 @@ export default () => {
                           justifyContent: "center",
                         }}
                       >
-                        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                        {index % 2 === 0 ? <HomeIcon /> : <LogoutIcon />}
                       </ListItemIcon>
                       <ListItemText
                         primary={text}
