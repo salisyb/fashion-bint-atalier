@@ -100,7 +100,7 @@ export const getListOfOrder = async (token) => {
   };
 
   if (token) {
-    config.headers.Authorization = `Token ${token}`;
+    config.headers["Authorization"] = `Token ${token}`;
   }
 
   const res = await api.get(`/api/v1/auth/order`, {}, config);
@@ -109,7 +109,26 @@ export const getListOfOrder = async (token) => {
     return res.data;
   }
 
-  console.log(res.problem);
+  console.log(res.data);
+
+  return [];
+};
+
+export const getClientListOfOrder = async (id) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  const res = await api.get(`/api/v1/order/${id}`, {}, config);
+
+  if (res.ok) {
+    return res.data;
+  }
+
+  console.log(res.data);
+
   return [];
 };
 
@@ -121,7 +140,7 @@ export const updateOrderInformation = async (orderId, data, token) => {
   };
 
   if (token) {
-    config.headers.Authorization = `Token ${token}`;
+    config.headers["Authorization"] = `Token ${token}`;
   }
 
   const res = await api.put(`/api/v1/auth/order/${orderId}/`, data, config);

@@ -886,6 +886,8 @@ export default function OverviewDashboard() {
     getOrders();
   }, []);
 
+  console.log(token);
+
   React.useEffect(() => {
     // get list of client
 
@@ -896,7 +898,6 @@ export default function OverviewDashboard() {
     const orders = await getListOfOrder(token);
 
     if (orders.length > 0) {
-      console.log(orders);
       dispatch(setOrders(orders));
     }
   };

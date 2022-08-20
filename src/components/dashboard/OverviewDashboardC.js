@@ -9,7 +9,7 @@ import {
   Button,
 } from "@mui/material";
 import { useSelector } from "react-redux";
-import { getListOfOrder } from "api/clients.api";
+import { getClientListOfOrder, getListOfOrder } from "api/clients.api";
 import BasicModal from "./Modal";
 import Invoice from "./ClientInvoice";
 import ReactPDF from "@react-pdf/renderer";
@@ -715,9 +715,11 @@ export default function ClientDashboard({}) {
 
   const getClientOrder = async () => {
     setLoading(true);
-    const order = await getListOfOrder(token);
+    const order = await getClientListOfOrder(user.id);
 
-    setClientOrder(order);
+    if (order) {
+      setClientOrder(order);
+    }
     setLoading(false);
   };
 

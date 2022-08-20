@@ -8,6 +8,9 @@ import AnimatedText from "react-animated-text-content";
 // import { useDispatch } from "react-redux";
 
 import DefaultHeader from "../headers/CenteredHeader";
+import { useSelector } from "react-redux";
+import storage from "utils/storage";
+import { api } from "api/config";
 // import { logout } from "store/auth.js";
 // import TwoColumnWithInput from "./TwoColumnWithInput.js";
 
@@ -78,7 +81,6 @@ const TextAnimated = ({ children, reload }) => {
 };
 
 export default () => {
-  // const { isAuthenticated } = useSelector((state) => state.auth);
   // const dispatch = useDispatch();
 
   let [counter, setCounter] = React.useState(0);

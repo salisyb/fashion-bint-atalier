@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { api } from "../api/config";
+import storage from "utils/storage";
 
 // Slice
 
@@ -50,33 +51,30 @@ export const getOrder = createAsyncThunk(
   }
 );
 
-const user_session = localStorage.getItem("user_session")
-  ? JSON.parse(localStorage.getItem("user_session"))
-  : {};
-
 const slice = createSlice({
   name: "auth",
   initialState: {
-    user: user_session.user || null,
-    clients: user_session.clients || [],
-    order: user_session.clients || [],
-    token: user_session.token || null,
-    isAuthenticated: user_session.token ? true : false,
+    token: storage.get("token") || null,
+    user: storage.get("user") || null,
+    isAuthenticated: storage.get("token") ? true : false,
+    clients: [],
+    order: [],
     loading: false,
   },
   reducers: {
     setOrders: (state, { payload }) => {
-      state.order = payload
+      state.order = payload;
     },
 
     addOrders: (state, { payload }) => {
-      state.order = [payload, ...state.order]
+      state.order = [payload, ...state.order];
     },
-  
+
     logoutSuccess: (state, action) => {
       state.user = null;
       state.isAuthenticated = false;
-      localStorage.removeItem("user_session");
+      storage.remove("user");
+      storage.remove("token");
     },
     addClients: (state, { payload }) => {
       state.clients = [payload, ...state.clients];
@@ -92,7 +90,8 @@ const slice = createSlice({
       state.isAuthenticated = true;
       state.loading = false;
 
-      localStorage.setItem("user_session", JSON.stringify(payload));
+      storage.set("user", payload.user);
+      storage.set("token", payload.token);
     },
     [login.rejected]: (state) => {
       state.loading = false;
@@ -124,7 +123,8 @@ const slice = createSlice({
 });
 export default slice.reducer;
 
-export const { logoutSuccess, addClients, setOrders, addOrders} = slice.actions;
+export const { logoutSuccess, addClients, setOrders, addOrders } =
+  slice.actions;
 
 export const logout = () => async (dispatch) => {
   try {
