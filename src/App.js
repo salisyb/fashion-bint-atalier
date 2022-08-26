@@ -3,6 +3,9 @@ import AlertMUITemplate from "react-alert-template-mui";
 import "tailwindcss/dist/base.css";
 import "styles/globalStyles.css";
 import React from "react";
+import Button from "@mui/material/Button";
+import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
+
 // import { css } from "styled-components/macro"; //eslint-disable-line
 
 /*
@@ -95,6 +98,7 @@ import EventLandingPage from "demos/EventLandingPage.js";
 
 /* Inner Pages */
 import LoginPage from "pages/Login.js";
+import InvoicesPage from "pages/Invoices.js";
 import DashboardPage from "pages/Dashboard.js";
 
 // import SignupPage from "pages/Signup.js";
@@ -110,6 +114,7 @@ import ComponentRenderer from "ComponentRenderer.js";
 // import ThankYouPage from "ThankYouPage.js";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { MyDocument } from "components/documentGenerator/PDFfile";
 
 const options = {
   position: positions.MIDDLE,
@@ -131,6 +136,9 @@ export default function App() {
           </Route>
           <Route path="/login">
             <LoginPage />
+          </Route>
+          <Route path="/invoices">
+            <InvoicesPage />
           </Route>
           <Route path="/about">
             <AboutUsPage />
