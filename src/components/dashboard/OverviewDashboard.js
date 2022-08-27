@@ -217,12 +217,18 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
             <LocalizationProvider dateAdapter={AdapterMoment}>
               <FormControl variant="standard">
                 <MobileDatePicker
+                  inputFormat="DD/MM/YYYY"
                   label="Date of collections"
                   value={value}
                   onChange={(newValue) => {
                     setValue(newValue);
                   }}
-                  renderInput={(params) => <TextField {...params} />}
+                  renderInput={(params) => (
+                    <>
+                      {console.log(params)}
+                      <TextField {...params} />
+                    </>
+                  )}
                 />
               </FormControl>
             </LocalizationProvider>

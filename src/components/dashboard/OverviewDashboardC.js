@@ -430,11 +430,15 @@ class ComponentToPrint extends React.Component {
 
 const ViewEditOrder = ({ data }) => {
   let componentRef = React.useRef();
+  const [selected, setSelected] = React.useState(0);
 
   return (
     <Box
       sx={{
         minWidth: { xs: "xs" },
+        maxHeight: "500px",
+        overflow: "scroll",
+        "&::-webkit-scrollbar": { display: "none" },
       }}
     >
       <Box
@@ -452,229 +456,253 @@ const ViewEditOrder = ({ data }) => {
         />
       </Box>
       {/* order detail */}
-      <>
-        <Divider>
-          <Chip label="ORDER DETAIL" />
-        </Divider>
 
+      <Divider>
+        <Chip
+          label="ORDER DETAIL"
+          onClick={() => setSelected(0)}
+          color={selected === 0 ? "warning" : "default"}
+        />
+      </Divider>
+      {selected === 0 && (
         <>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              my: "10px",
-            }}
-          >
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              Number of Attire
-            </Typography>
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              {data.no_of_attire}
-            </Typography>
-          </Box>
-          <Divider />
-        </>
-
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              my: "10px",
-            }}
-          >
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              Style
-            </Typography>
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              {data.style}
-            </Typography>
-          </Box>
-          <Divider />
-        </>
-
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              my: "10px",
-            }}
-          >
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              Description
-            </Typography>
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              {data.description}
-            </Typography>
-          </Box>
-          <Divider />
-        </>
-
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              my: "10px",
-            }}
-          >
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              Collection Date
-            </Typography>
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              {moment(data.collection_date).format("MMM D YYYY")}
-            </Typography>
-          </Box>
-          <Divider />
-        </>
-
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              my: "10px",
-            }}
-          >
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              Status of order
-            </Typography>
-            <Typography
+          <>
+            <Box
               sx={{
-                fontSize: { xs: "12px", sm: "18px" },
-                color: data.status === "Completed" ? "green" : "black",
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
               }}
             >
-              {data.status}
-            </Typography>
-          </Box>
-          <Divider />
-        </>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Number of Attire
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                {data.no_of_attire}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
 
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              my: "10px",
-            }}
-          >
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              Price
-            </Typography>
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              <CurrencyFormat
-                value={data.amount}
-                displayType={"text"}
-                thousandSeparator={true}
-                prefix={"₦"}
-              />
-            </Typography>
-          </Box>
-          <Divider />
-        </>
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Style
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                {data.style}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
 
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              my: "10px",
-            }}
-          >
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              Discount
-            </Typography>
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              {data.discount && (
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Description
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                {data.description}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Collection Date
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                {moment(data.collection_date).format("MMM D YYYY")}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Status of order
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: { xs: "12px", sm: "18px" },
+                  color: data.status === "Completed" ? "green" : "black",
+                }}
+              >
+                {data.status}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Price
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
                 <CurrencyFormat
-                  value={data.discount}
+                  value={data.amount}
                   displayType={"text"}
                   thousandSeparator={true}
                   prefix={"₦"}
                 />
-              )}
-            </Typography>
-          </Box>
-          <Divider />
-        </>
-      </>
-      <>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            my: "10px",
-          }}
-        >
-          <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-            Amount Paid
-          </Typography>
-          <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-            <CurrencyFormat
-              value={data.amount_paid}
-              displayType={"text"}
-              thousandSeparator={true}
-              prefix={"₦"}
-            />
-          </Typography>
-        </Box>
-        <Divider />
-      </>
+              </Typography>
+            </Box>
+            <Divider />
+          </>
 
-      <>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            my: "10px",
-          }}
-        >
-          <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-            Total Amount
-          </Typography>
-          <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-            <CurrencyFormat
-              value={
-                Number(data.amount) * Number(data.no_of_attire) -
-                (data.discount ? data.discount : 0)
-              }
-              displayType={"text"}
-              thousandSeparator={true}
-              prefix={"₦"}
-            />
-          </Typography>
-        </Box>
-        <Divider />
-      </>
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Discount
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                {data.discount && (
+                  <CurrencyFormat
+                    value={data.discount}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    prefix={"₦"}
+                  />
+                )}
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Amount Paid
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                <CurrencyFormat
+                  value={data.amount_paid}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  prefix={"₦"}
+                />
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                Total Amount
+              </Typography>
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                <CurrencyFormat
+                  value={
+                    Number(data.amount) * Number(data.no_of_attire) -
+                    (data.discount ? data.discount : 0)
+                  }
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  prefix={"₦"}
+                />
+              </Typography>
+            </Box>
+            <Divider />
+          </>
+        </>
+      )}
 
       {/* measurement detail */}
       <>
         <Divider sx={{ marginTop: "30px" }}>
-          <Chip label="MEASUREMENT DETAIL" />
+          <Chip
+            label="MEASUREMENT DETAIL"
+            onClick={() => setSelected(1)}
+            color={selected === 1 ? "warning" : "default"}
+          />
         </Divider>
         <Box></Box>
       </>
 
-      <>
+      {selected === 1 && (
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            my: "10px",
+            minHeight: "600px",
           }}
         >
-          <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-            Measurement Name
-          </Typography>
-          <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-            {data.measurement.measurement_owner}
-          </Typography>
+          {Object.entries(data.measurement).map(([key, value]) => (
+            <>
+              {key !== "id" && (
+                <>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      my: "10px",
+                    }}
+                  >
+                    <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                      {key.replaceAll("_", " ")}
+                    </Typography>
+                    <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                      {value}
+                    </Typography>
+                  </Box>
+                  <Divider />
+                </>
+              )}
+            </>
+          ))}
         </Box>
-        <Divider />
-      </>
-
+      )}
       {/* <Box marginTop={"40px"} spacing={2}>
         <ReactToPrint
           trigger={() => <Button variant="outlined">Generate Invoice</Button>}
@@ -694,6 +722,7 @@ export default function ClientDashboard({}) {
   const { user, token } = useSelector((state) => state.auth);
   const [clientOrder, setClientOrder] = React.useState([]);
   const [clickData, setClickData] = React.useState({});
+  const [selected, setSelected] = React.useState(0);
 
   const [modalOpen, setModalOpen] = React.useState(false);
   const handleCloseModal = () => setModalOpen(!modalOpen);
