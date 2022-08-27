@@ -10518,6 +10518,11 @@ react-lifecycles-compat@^3.0.0:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
+react-mobile-share@^1.0.14:
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/react-mobile-share/-/react-mobile-share-1.0.14.tgz#8b9e199c0811da8d3f3afbec33cfee5df9829436"
+  integrity sha512-vxvasF3cAeXOMIrR+y2mTHDrNoDE7l16Sq6K9Z8demzgw9T8SvSy1V5gAo4fTrqgoMXicsL+b2YnGIj3vqkvUA==
+
 react-modal@^3.13.1:
   version "3.15.1"
   resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-3.15.1.tgz#950ce67bfef80971182dd0ed38f2d9b1a681288b"

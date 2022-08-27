@@ -25,6 +25,8 @@ import moment from "moment";
 const ComponentToPrint = React.forwardRef(({ data }, ref) => {
   const initialAmount = 0;
 
+  console.log(data);
+
   const totalBalance = data.reduce(
     (initialAmount, item) =>
       initialAmount +

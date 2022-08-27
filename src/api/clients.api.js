@@ -114,6 +114,30 @@ export const getListOfOrder = async (token) => {
   return [];
 };
 
+export const getInvoiceOrder = async (ref) => {
+  const res = await api.get(`/api/v1/invoice?i=${ref}`);
+
+  if (res.ok) {
+    return res.data;
+  }
+
+  console.log(res.data);
+
+  return [];
+};
+
+export const createInvoiceOrder = async (data) => {
+  const res = await api.post("/api/v1/invoice/", data);
+
+  if (res.ok) {
+    return res.data;
+  }
+
+  console.log(res.data);
+
+  return false;
+};
+
 export const getClientListOfOrder = async (id) => {
   const config = {
     headers: {
