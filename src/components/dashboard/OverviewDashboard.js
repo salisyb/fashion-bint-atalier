@@ -35,6 +35,7 @@ import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createClientOrder,
+  createInvoiceOrder,
   getClientMeasurement,
   getListOfOrder,
   updateOrderInformation,
@@ -48,6 +49,7 @@ import OneComponentPrint from "./InvoicePrintOne";
 import MarkComponentPrint from "./InvoicePrintMany";
 import CurrencyFormat from "react-currency-format";
 import { useHistory } from "react-router-dom";
+import { generateRef } from "utils/helper";
 
 // import { LocalizationProvider } from "@mui/x-date-pickers";
 
@@ -866,7 +868,7 @@ const imageUrl =
 export default function OverviewDashboard() {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
-
+  const [loading, setLoading] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
   const handleCloseModal = () => {
     getOrders();
@@ -874,6 +876,8 @@ export default function OverviewDashboard() {
   };
 
   let componentRef = React.useRef();
+
+  const history = useHistory();
 
   const [selectedOption, setSelectedOption] = React.useState(null);
   const [title, setTitle] = React.useState("");
@@ -885,8 +889,6 @@ export default function OverviewDashboard() {
   React.useEffect(() => {
     getOrders();
   }, []);
-
-  console.log(token);
 
   React.useEffect(() => {
     // get list of client
@@ -922,8 +924,24 @@ export default function OverviewDashboard() {
     }
   };
 
-  const generateInvoice = () => {
-    handlePrint();
+  const generateInvoice = async () => {
+    setLoading(true);
+
+    const ref = generateRef();
+
+    const data = {
+      reference: ref,
+      order: markedOrder.map((order) => order.id),
+    };
+    const res = await createInvoiceOrder(data);
+    if (res) {
+      history.push(`/invoices?kbyb=${res.reference}`);
+      setLoading(false);
+      return;
+    }
+
+    alert("Please try again");
+    setLoading(false);
   };
 
   const pageStyle = `
@@ -960,6 +978,22 @@ export default function OverviewDashboard() {
     const newOrder = markedOrder.filter((item) => order.id !== item.id);
     setMarkedOrder(newOrder);
   };
+
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        width="100%"
+      >
+        <CircularProgress />
+        <br />
+        <Typography>Please wait</Typography>
+      </Box>
+    );
+  }
 
   return (
     <>
