@@ -48,7 +48,7 @@ const ComponentToPrint = ({ data }) => {
           boxShadow: 3,
           borderRadius: "20px",
           padding: { xs: "20", sm: "30px" },
-          paddingX: { xs: "200px", sm: "", md: "" },
+          // paddingX: { xs: "200px", sm: "", md: "" },
         }}
       >
         <Box
@@ -59,6 +59,7 @@ const ComponentToPrint = ({ data }) => {
             alignItems: "",
             justifyContent: "space-between",
             my: "20px",
+            padding: "25px",
           }}
         >
           <img
@@ -134,10 +135,10 @@ const ComponentToPrint = ({ data }) => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            width="35%"
+
             // backgroundColor=""
           >
-            <Box textAlign="right">
+            <Box textAlign="right" marginRight={"40px"}>
               <Typography>Invoice #</Typography>
               <Typography>Date</Typography>
               <Typography>Collection Date</Typography>
@@ -152,10 +153,12 @@ const ComponentToPrint = ({ data }) => {
           </Box>
         </Box>
 
-        <InvoiceItems data={data} />
+        <Box padding="20px">
+          <InvoiceItems data={data} />
+        </Box>
         <Box display="flex" justifyContent="space-between" mt="20px">
           {/* payment instruction */}
-          <Box>
+          <Box padding={{ xs: "20px", sm: "", md: "" }}>
             <Typography fontWeight="600">Payment Instruction</Typography>
             <Typography>Account Number: 1017522000</Typography>
             <Typography>Bank Name: Zenith Bank</Typography>
@@ -220,7 +223,7 @@ const ComponentToPrint = ({ data }) => {
           </Box>
         </Box>
 
-        <Box mt="30px">
+        <Box mt="30px" padding="20px">
           <Typography fontWeight="600">Dear Esteemed Client</Typography>
           <Typography mb="10px" fontWeight="600">
             You are to either pay 50% deposit or full payment of your service

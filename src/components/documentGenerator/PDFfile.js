@@ -125,6 +125,19 @@ export const MyDocument = ({ data }) => {
     initialPaidAmount
   );
 
+  const [isDiscount, setDiscount] = React.useState(false);
+
+  React.useEffect(() => {
+    data.every((item) => {
+      if (item.discount) {
+        setDiscount(true);
+        return false;
+      }
+
+      return true;
+    });
+  }, [data]);
+
   return (
     <Document>
       <Page size={"A4"} style={styles.page}>
@@ -198,33 +211,38 @@ export const MyDocument = ({ data }) => {
             <Text style={styles.tableName}>Name</Text>
             <Text style={styles.fabric}>Fabric</Text>
             <Text style={styles.price}>Price</Text>
-            <Text style={styles.discount}>Discount</Text>
+            {isDiscount && <Text style={styles.discount}>Discount</Text>}
             <Text style={styles.amount}>Amount</Text>
           </View>
 
-          <View style={styles.divider} />
-
-          <View style={styles.tableHeader}>
-            <Text style={{ ...styles.tableName, ...{ fontSize: "11px" } }}>
-              {`this is a really long line\n`}
-              <Text style={{ fontSize: "10px" }}>
-                This is the description of the text
-              </Text>
-            </Text>
-            <Text style={{ ...styles.fabric, ...{ fontSize: "11px" } }}>
-              Fabric
-            </Text>
-            <Text style={{ ...styles.price, ...{ fontSize: "11px" } }}>
-              Price
-            </Text>
-            <Text style={{ ...styles.discount, ...{ fontSize: "11px" } }}>
-              Discount
-            </Text>
-            <Text style={{ ...styles.amount, ...{ fontSize: "11px" } }}>
-              Amount
-            </Text>
-          </View>
-          <View style={styles.divider} />
+          {data.map((row) => (
+            <>
+              <View style={styles.divider} />
+              <View style={styles.tableHeader}>
+                <Text style={{ ...styles.tableName, ...{ fontSize: "11px" } }}>
+                  {`${row.style}\n`}
+                  <Text style={{ fontSize: "10px" }}>{row.description}</Text>
+                </Text>
+                <Text style={{ ...styles.fabric, ...{ fontSize: "11px" } }}>
+                  {row.no_of_attire}
+                </Text>
+                <Text style={{ ...styles.price, ...{ fontSize: "11px" } }}>
+                  # {row.amount}
+                </Text>
+                {isDiscount && (
+                  <Text style={{ ...styles.discount, ...{ fontSize: "11px" } }}>
+                    # {row.discount}
+                  </Text>
+                )}
+                <Text style={{ ...styles.amount, ...{ fontSize: "11px" } }}>
+                  #{" "}
+                  {Number(row.amount) * Number(row.no_of_attire) -
+                    (row.discount ? Number(row.discount) : 0)}
+                </Text>
+              </View>
+              <View style={styles.divider} />
+            </>
+          ))}
         </View>
 
         {/*  content  end*/}

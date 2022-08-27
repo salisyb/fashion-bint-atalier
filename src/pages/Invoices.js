@@ -113,11 +113,11 @@ export default function Invoice() {
         </Button>
       </Box>
 
-      <InvoiceTemplate data={orders} />
+      {/* <InvoiceTemplate data={orders} /> */}
 
-      {/* <PDFViewer style={{ width: "100vw", height: "100vh" }}>
+      <PDFViewer style={{ width: "100vw", height: "100vh" }}>
         <MyDocument data={orders} />
-      </PDFViewer> */}
+      </PDFViewer>
     </Box>
   );
 }
