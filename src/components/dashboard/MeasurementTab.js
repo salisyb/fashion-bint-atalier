@@ -79,6 +79,17 @@ const MeasurementInformation = ({ measurement }) => (
       value={measurement.shoulder_to_knee}
     />
     <MeasurementText label={"Gown Length"} value={measurement.gown_length} />
+    <MeasurementText label={"Center Front"} value={measurement.center_front} />
+    <MeasurementText
+      label={"Back Half Length"}
+      value={measurement.back_half_length}
+    />
+    <MeasurementText
+      label={"Corset Length"}
+      value={measurement.corset_length}
+    />
+    <MeasurementText label={"Neck Round"} value={measurement.neck_round} />
+
     <MeasurementText
       label={"Waist to Knee"}
       value={measurement.waist_to_knee}
@@ -121,7 +132,6 @@ export default function MeasurementTab({ userData }) {
   };
 
   const handleAddMeasurement = (data) => {
-   
     setMeasurement([...measurement, data]);
     setAdd(false);
 

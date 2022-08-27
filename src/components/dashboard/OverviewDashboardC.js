@@ -680,7 +680,7 @@ const ViewEditOrder = ({ data }) => {
         >
           {Object.entries(data.measurement).map(([key, value]) => (
             <>
-              {key !== "id" && (
+              {key !== "id" && key !== "owner" && (
                 <>
                   <Box
                     sx={{

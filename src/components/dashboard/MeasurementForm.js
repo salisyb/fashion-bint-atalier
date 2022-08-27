@@ -46,6 +46,12 @@ export default function MeasurementForm({
     waist_to_knee: "",
     skirt_length: "",
     bust_round: "",
+
+    center_front: "",
+    back_half_length: "",
+    corset_length: "",
+    neck_round: "",
+
     under_bust_round: "",
     waist_round: "",
     hips_round: "",
@@ -178,6 +184,50 @@ export default function MeasurementForm({
               name={"blouse_length"}
               value={values.blouse_length}
               onChange={handleChange("blouse_length")}
+              type="text"
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <TextField
+              id="standard-password-input"
+              label={"Center Front"}
+              required
+              name={"center_front"}
+              value={values.center_front}
+              onChange={handleChange("center_front")}
+              type="text"
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <TextField
+              id="standard-password-input"
+              label={"Back Half Length"}
+              required
+              name={"back_half_length"}
+              value={values.back_half_length}
+              onChange={handleChange("back_half_length")}
+              type="text"
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <TextField
+              id="standard-password-input"
+              label={"Corset Length"}
+              required
+              name={"corset_length"}
+              value={values.corset_length}
+              onChange={handleChange("corset_length")}
+              type="text"
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <TextField
+              id="standard-password-input"
+              label={"Neck Round"}
+              required
+              name={"neck_round"}
+              value={values.neck_round}
+              onChange={handleChange("neck_round")}
               type="text"
               autoComplete="current-password"
               variant="standard"
