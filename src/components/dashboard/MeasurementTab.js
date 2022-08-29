@@ -65,53 +65,59 @@ const MeasurementInformation = ({ measurement }) => (
     <MeasurementText label={"Owner"} value={measurement.measurement_owner} />
     <MeasurementText label={"Bust Point"} value={measurement.bust_point} />
     <MeasurementText label={"Under Bust"} value={measurement.under_bust} />
+    <MeasurementText
+      label={"Under Bust Round"}
+      value={measurement.under_bust_round}
+    />
     <MeasurementText label={"Half Length"} value={measurement.half_length} />
     <MeasurementText
       label={"Shoulder to hip"}
       value={measurement.shoulder_to_hip}
     />
     <MeasurementText
-      label={"Blouse Length"}
-      value={measurement.blouse_length}
-    />
-    <MeasurementText
       label={"Shoulder to knee"}
       value={measurement.shoulder_to_knee}
     />
     <MeasurementText label={"Gown Length"} value={measurement.gown_length} />
-    <MeasurementText label={"Center Front"} value={measurement.center_front} />
-    <MeasurementText
-      label={"Back Half Length"}
-      value={measurement.back_half_length}
-    />
-    <MeasurementText
-      label={"Corset Length"}
-      value={measurement.corset_length}
-    />
-    <MeasurementText label={"Neck Round"} value={measurement.neck_round} />
 
     <MeasurementText
       label={"Waist to Knee"}
       value={measurement.waist_to_knee}
     />
     <MeasurementText label={"Skirt Length"} value={measurement.skirt_length} />
+
     <MeasurementText label={"Bust round"} value={measurement.bust_round} />
-    <MeasurementText
-      label={"Under Bust Round"}
-      value={measurement.under_bust_round}
-    />
     <MeasurementText label={"Waist Round"} value={measurement.waist_round} />
+
     <MeasurementText label={"Hips Round"} value={measurement.hips_round} />
     <MeasurementText
       label={"Sleeve Length"}
       value={measurement.sleeve_length}
     />
+
     <MeasurementText
       label={"Sleeve round/biceps"}
       value={measurement.sleeve_round_biceps}
     />
-    <MeasurementText label={"Shoulder"} value={measurement.shoulder} />
     <MeasurementText label={"Arm Hole"} value={measurement.arm_hole} />
+
+    <MeasurementText
+      label={"Blouse Length"}
+      value={measurement.blouse_length}
+    />
+    <MeasurementText label={"Shoulder"} value={measurement.shoulder} />
+    <MeasurementText
+      label={"Back Half Length"}
+      value={measurement.back_half_length}
+    />
+
+    <MeasurementText
+      label={"Corset Length"}
+      value={measurement.corset_length}
+    />
+    <MeasurementText label={"Neck Round"} value={measurement.neck_round} />
+
+    <MeasurementText label={"Center Front"} value={measurement.center_front} />
   </Box>
 );
 

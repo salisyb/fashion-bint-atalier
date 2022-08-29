@@ -157,6 +157,18 @@ export default function MeasurementForm({
             />
             <TextField
               id="standard-password-input"
+              label={"Under bust round"}
+              required
+              name={"under_bust_round"}
+              value={values.under_bust_round}
+              onChange={handleChange("under_bust_round")}
+              type="text"
+              autoComplete="current-password"
+              variant="standard"
+            />
+
+            <TextField
+              id="standard-password-input"
               label={"Half Length"}
               required
               name={"half_length"}
@@ -173,61 +185,6 @@ export default function MeasurementForm({
               name={"shoulder_to_hip"}
               value={values.shoulder_to_hip}
               onChange={handleChange("shoulder_to_hip")}
-              type="text"
-              autoComplete="current-password"
-              variant="standard"
-            />
-            <TextField
-              id="standard-password-input"
-              label={"Blouse Length"}
-              required
-              name={"blouse_length"}
-              value={values.blouse_length}
-              onChange={handleChange("blouse_length")}
-              type="text"
-              autoComplete="current-password"
-              variant="standard"
-            />
-            <TextField
-              id="standard-password-input"
-              label={"Center Front"}
-              required
-              name={"center_front"}
-              value={values.center_front}
-              onChange={handleChange("center_front")}
-              type="text"
-              autoComplete="current-password"
-              variant="standard"
-            />
-            <TextField
-              id="standard-password-input"
-              label={"Back Half Length"}
-              required
-              name={"back_half_length"}
-              value={values.back_half_length}
-              onChange={handleChange("back_half_length")}
-              type="text"
-              autoComplete="current-password"
-              variant="standard"
-            />
-            <TextField
-              id="standard-password-input"
-              label={"Corset Length"}
-              required
-              name={"corset_length"}
-              value={values.corset_length}
-              onChange={handleChange("corset_length")}
-              type="text"
-              autoComplete="current-password"
-              variant="standard"
-            />
-            <TextField
-              id="standard-password-input"
-              label={"Neck Round"}
-              required
-              name={"neck_round"}
-              value={values.neck_round}
-              onChange={handleChange("neck_round")}
               type="text"
               autoComplete="current-password"
               variant="standard"
@@ -254,6 +211,18 @@ export default function MeasurementForm({
               autoComplete="current-password"
               variant="standard"
             />
+            <TextField
+              id="standard-password-input"
+              label={"Blouse Length"}
+              required
+              name={"blouse_length"}
+              value={values.blouse_length}
+              onChange={handleChange("blouse_length")}
+              type="text"
+              autoComplete="current-password"
+              variant="standard"
+            />
+
             <TextField
               id="standard-password-input"
               label={"Waist to Knee"}
@@ -283,17 +252,6 @@ export default function MeasurementForm({
               name={"bust_round"}
               value={values.bust_round}
               onChange={handleChange("bust_round")}
-              type="text"
-              autoComplete="current-password"
-              variant="standard"
-            />
-            <TextField
-              id="standard-password-input"
-              label={"Under bust round"}
-              required
-              name={"under_bust_round"}
-              value={values.under_bust_round}
-              onChange={handleChange("under_bust_round")}
               type="text"
               autoComplete="current-password"
               variant="standard"
@@ -344,6 +302,17 @@ export default function MeasurementForm({
             />
             <TextField
               id="standard-password-input"
+              label={"Arm Hole"}
+              required
+              name={"arm_hole"}
+              value={values.arm_hole}
+              onChange={handleChange("arm_hole")}
+              type="text"
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <TextField
+              id="standard-password-input"
               label={"Shoulder"}
               required
               name={"shoulder"}
@@ -353,13 +322,49 @@ export default function MeasurementForm({
               autoComplete="current-password"
               variant="standard"
             />
+
             <TextField
               id="standard-password-input"
-              label={"Arm Hole"}
+              label={"Back Half Length"}
               required
-              name={"arm_hole"}
-              value={values.arm_hole}
-              onChange={handleChange("arm_hole")}
+              name={"back_half_length"}
+              value={values.back_half_length}
+              onChange={handleChange("back_half_length")}
+              type="text"
+              autoComplete="current-password"
+              variant="standard"
+            />
+            <TextField
+              id="standard-password-input"
+              label={"Corset Length"}
+              required
+              name={"corset_length"}
+              value={values.corset_length}
+              onChange={handleChange("corset_length")}
+              type="text"
+              autoComplete="current-password"
+              variant="standard"
+            />
+
+            <TextField
+              id="standard-password-input"
+              label={"Neck Round"}
+              required
+              name={"neck_round"}
+              value={values.neck_round}
+              onChange={handleChange("neck_round")}
+              type="text"
+              autoComplete="current-password"
+              variant="standard"
+            />
+
+            <TextField
+              id="standard-password-input"
+              label={"Center Front"}
+              required
+              name={"center_front"}
+              value={values.center_front}
+              onChange={handleChange("center_front")}
               type="text"
               autoComplete="current-password"
               variant="standard"
