@@ -36,13 +36,14 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   createClientOrder,
   createInvoiceOrder,
+  deleteOrderInformation,
   getClientMeasurement,
   getListOfOrder,
   updateOrderInformation,
 } from "api/clients.api";
 import { minHeight } from "@mui/system";
 import moment from "moment";
-import { setOrders, addOrders, getClient } from "store/auth";
+import { setOrders, addOrders, getClient, removeOrder } from "store/auth";
 import CircularProgress from "@mui/material/CircularProgress";
 import OneComponentPrint from "./InvoicePrintOne";
 
@@ -498,6 +499,16 @@ const ViewEditOrder = ({ data, onClose }) => {
   const [edit, setEdit] = React.useState(false);
   const { token } = useSelector((state) => state.auth);
 
+  const [orderEdit, setOrderEdit] = React.useState({
+    amount_paid: data.amount_paid,
+    discount: data.discount,
+    status: data.status,
+    amount: data.amount,
+    description: data.description,
+    no_of_attire: data.no_of_attire,
+    style: data.style,
+  });
+
   const [status, setState] = React.useState(data.status);
   const [amount_paid, setAmountPaid] = React.useState(data.amount_paid);
   const [discount, setDiscount] = React.useState(data.discount);
@@ -505,13 +516,17 @@ const ViewEditOrder = ({ data, onClose }) => {
 
   const toggleEdit = () => setEdit(!edit);
 
+  const handleSetEdit = (e) => {
+    setOrderEdit({ ...orderEdit, [e.target.name]: e.target.value });
+  };
+
   const handleSaveEdit = async () => {
     setLoading(true);
     // update the order information
 
     const response = await updateOrderInformation(
       data.id,
-      { ...data, status, amount_paid, discount },
+      { ...data, ...orderEdit },
       token
     );
 
@@ -526,6 +541,8 @@ const ViewEditOrder = ({ data, onClose }) => {
       <Box
         sx={{
           minWidth: { xs: "xs" },
+          maxHeight: "500px",
+          overflow: "scroll",
         }}
       >
         {/* order detail */}
@@ -579,9 +596,20 @@ const ViewEditOrder = ({ data, onClose }) => {
               <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
                 Number of Attire
               </Typography>
-              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-                {data.no_of_attire}
-              </Typography>
+              {!edit ? (
+                <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                  {orderEdit.no_of_attire}
+                </Typography>
+              ) : (
+                <TextField
+                  type="text"
+                  placeholder="Number of attire"
+                  value={orderEdit.no_of_attire}
+                  name="no_of_attire"
+                  onChange={(e) => handleSetEdit(e)}
+                  size="small"
+                />
+              )}
             </Box>
             <Divider />
           </>
@@ -597,9 +625,20 @@ const ViewEditOrder = ({ data, onClose }) => {
               <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
                 Style
               </Typography>
-              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-                {data.style}
-              </Typography>
+              {!edit ? (
+                <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                  {orderEdit.style}
+                </Typography>
+              ) : (
+                <TextField
+                  type="text"
+                  placeholder="Style"
+                  value={orderEdit.style}
+                  name="style"
+                  onChange={(e) => handleSetEdit(e)}
+                  size="small"
+                />
+              )}
             </Box>
             <Divider />
           </>
@@ -615,9 +654,20 @@ const ViewEditOrder = ({ data, onClose }) => {
               <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
                 Description
               </Typography>
-              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-                {data.description}
-              </Typography>
+              {!edit ? (
+                <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                  {orderEdit.description}
+                </Typography>
+              ) : (
+                <TextField
+                  type="text"
+                  placeholder="Description"
+                  value={orderEdit.description}
+                  name="description"
+                  onChange={(e) => handleSetEdit(e)}
+                  size="small"
+                />
+              )}
             </Box>
             <Divider />
           </>
@@ -656,17 +706,19 @@ const ViewEditOrder = ({ data, onClose }) => {
                 <Typography
                   sx={{
                     fontSize: { xs: "12px", sm: "18px" },
-                    color: status === "Completed" ? "green" : "yellow",
+                    color:
+                      orderEdit.status === "Completed" ? "green" : "yellow",
                   }}
                 >
-                  {status}
+                  {orderEdit.status}
                 </Typography>
               ) : (
                 <TextField
                   type="text"
                   placeholder="Status of order"
-                  value={status}
-                  onChange={(e) => setState(e.target.value)}
+                  value={orderEdit.status}
+                  name="status"
+                  onChange={(e) => handleSetEdit(e)}
                   size="small"
                 />
               )}
@@ -686,14 +738,25 @@ const ViewEditOrder = ({ data, onClose }) => {
             <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
               Price
             </Typography>
-            <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-              <CurrencyFormat
-                value={data.amount}
-                displayType={"text"}
-                thousandSeparator={true}
-                prefix={"₦"}
+            {!edit ? (
+              <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
+                <CurrencyFormat
+                  value={orderEdit.amount}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  prefix={"₦"}
+                />
+              </Typography>
+            ) : (
+              <TextField
+                type="text"
+                placeholder="Price"
+                name="amount"
+                value={orderEdit.amount}
+                onChange={(e) => handleSetEdit(e)}
+                size="small"
               />
-            </Typography>
+            )}
           </Box>
           <Divider />
         </>
@@ -712,14 +775,15 @@ const ViewEditOrder = ({ data, onClose }) => {
 
             {!edit ? (
               <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-                ₦{amount_paid}
+                ₦{orderEdit.amount_paid}
               </Typography>
             ) : (
               <TextField
                 type="text"
                 placeholder="Amount paid"
-                value={amount_paid}
-                onChange={(e) => setAmountPaid(e.target.value)}
+                name="amount_paid"
+                value={orderEdit.amount_paid}
+                onChange={(e) => handleSetEdit(e)}
                 size="small"
               />
             )}
@@ -741,14 +805,15 @@ const ViewEditOrder = ({ data, onClose }) => {
 
             {!edit ? (
               <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
-                {discount && `₦${discount}`}
+                {orderEdit.discount && `₦${orderEdit.discount}`}
               </Typography>
             ) : (
               <TextField
                 type="text"
                 placeholder="Discount"
-                value={discount}
-                onChange={(e) => setDiscount(e.target.value)}
+                value={orderEdit.discount}
+                name="discount"
+                onChange={(e) => handleSetEdit(e)}
                 size="small"
               />
             )}
@@ -770,8 +835,8 @@ const ViewEditOrder = ({ data, onClose }) => {
             <Typography sx={{ fontSize: { xs: "12px", sm: "18px" } }}>
               <CurrencyFormat
                 value={
-                  Number(data.amount) * Number(data.no_of_attire) -
-                  (data.discount ? data.discount : 0)
+                  Number(orderEdit.amount) * Number(orderEdit.no_of_attire) -
+                  (orderEdit.discount ? orderEdit.discount : 0)
                 }
                 displayType={"text"}
                 thousandSeparator={true}
@@ -930,6 +995,19 @@ export default function OverviewDashboard() {
     }
   };
 
+  const deleteOrder = async () => {
+    setLoading(true);
+    markedOrder.map(async (order) => {
+      const deleted = await deleteOrderInformation(order.id);
+      if (deleted) {
+        handleOnMark(order);
+        dispatch(removeOrder(order.id));
+      }
+    });
+
+    setLoading(false);
+  };
+
   const generateInvoice = async () => {
     setLoading(true);
 
@@ -940,6 +1018,7 @@ export default function OverviewDashboard() {
       order: markedOrder.map((order) => order.id),
     };
     const res = await createInvoiceOrder(data);
+
     if (res) {
       history.push(`/invoices?kbyb=${res.reference}`);
       setLoading(false);
@@ -1083,26 +1162,37 @@ export default function OverviewDashboard() {
                 New Order
               </Button>
               {markedOrder.length > 0 && (
-                <Box
-                  sx={{
-                    width: { xs: "100%", sm: "200px" },
-                    marginTop: { xs: "10px", sm: "" },
-                  }}
-                >
-                  {/* <ReactToPrint
-                  pageStyle={pageStyle}
-                  trigger={() => ( */}
-                  <Button
-                    onClick={generateInvoice}
-                    sx={{ width: "100%" }}
-                    variant="outlined"
+                <>
+                  <Box
+                    sx={{
+                      width: { xs: "100%", sm: "200px" },
+                      marginTop: { xs: "10px", sm: "" },
+                    }}
                   >
-                    Generate Invoice
-                  </Button>
-                  {/* )}
-                  content={() => componentRef}
-                /> */}
-                </Box>
+                    <Button
+                      onClick={deleteOrder}
+                      sx={{ width: "100%" }}
+                      variant="contained"
+                      color="error"
+                    >
+                      Delete
+                    </Button>
+                  </Box>
+                  <Box
+                    sx={{
+                      width: { xs: "100%", sm: "200px" },
+                      marginTop: { xs: "10px", sm: "" },
+                    }}
+                  >
+                    <Button
+                      onClick={generateInvoice}
+                      sx={{ width: "100%" }}
+                      variant="outlined"
+                    >
+                      Generate Invoice
+                    </Button>
+                  </Box>
+                </>
               )}
             </Box>
           </Grid>

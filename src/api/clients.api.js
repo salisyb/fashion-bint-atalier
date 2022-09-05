@@ -51,6 +51,56 @@ export const createClientMeasurement = async (measurementData, token) => {
   return false;
 };
 
+export const updateClientMeasurement = async (measurementData, token) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  if (token) {
+    config.headers.Authorization = `Token ${token}`;
+  }
+
+  const res = await api.put(
+    `/api/v1/auth/measurement/${measurementData.id}/`,
+    measurementData,
+    config
+  );
+
+  if (res.ok) {
+    return res.data;
+  }
+
+  console.log(res.problem);
+  console.log(res.data);
+  return false;
+};
+
+export const deleteClientMeasurement = async (measurementId, token) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  if (token) {
+    config.headers.Authorization = `Token ${token}`;
+  }
+
+  const res = await api.delete(
+    `/api/v1/auth/measurement/${measurementId}`,
+    {},
+    config
+  );
+
+  if (res.ok) {
+    return true;
+  }
+
+  return false;
+};
+
 export const createClientOrder = async (orderData, token) => {
   const config = {
     headers: {
@@ -171,6 +221,26 @@ export const updateOrderInformation = async (orderId, data, token) => {
 
   if (res.ok) {
     return res.data;
+  }
+
+  return false;
+};
+
+export const deleteOrderInformation = async (orderId, data, token) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  if (token) {
+    config.headers["Authorization"] = `Token ${token}`;
+  }
+
+  const res = await api.delete(`/api/v1/auth/order/${orderId}/`, {}, config);
+
+  if (res.ok) {
+    return true;
   }
 
   return false;

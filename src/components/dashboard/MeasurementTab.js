@@ -7,13 +7,16 @@ import Box from "@mui/material/Box";
 // import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { TextField } from "@mui/material";
-import { Typography } from "@mui/material";
+import { Typography, IconButton } from "@mui/material";
 import Button from "@mui/material/Button";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import MeasurementForm from "./MeasurementForm";
-import { getClientMeasurement } from "api/clients.api";
+import { deleteClientMeasurement, getClientMeasurement } from "api/clients.api";
 import { useSelector } from "react-redux";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddCircle from "@mui/icons-material/AddCircle";
+import Edit from "@mui/icons-material/Edit";
 
 const initialMFData = {
   measurementFor: { value: "", label: "Measurement For" },
@@ -132,9 +135,10 @@ const MeasurementInformation = ({ measurement }) => (
 
 export default function MeasurementTab({ userData }) {
   const [measurement, setMeasurement] = React.useState([]);
-  const [formData, setFormData] = React.useState(getInitialMFData());
+  const [formData, setFormData] = React.useState(null);
   const [value, setValue] = React.useState(0);
   const [add, setAdd] = React.useState(false);
+  const [update, setUpdate] = React.useState(false);
 
   const { token } = useSelector((state) => state.auth);
 
@@ -147,6 +151,12 @@ export default function MeasurementTab({ userData }) {
   };
 
   const handleAddMeasurement = (data) => {
+    if (update) {
+      setMeasurement(measurement.map((m) => (m.id === data.id ? data : m)));
+      setAdd(false);
+
+      return;
+    }
     setMeasurement([...measurement, data]);
     setAdd(false);
 
@@ -163,7 +173,24 @@ export default function MeasurementTab({ userData }) {
     setMeasurement(data);
   };
 
-  console.log(measurement);
+  const handleDelete = async () => {
+    const result = await deleteClientMeasurement(measurement[value].id);
+    if (result) {
+      setMeasurement(measurement.filter((m) => m.id !== measurement[value].id));
+      setValue(0);
+    }
+  };
+
+  const handleUpdate = () => {
+    setFormData(measurement[value]);
+    setUpdate(true);
+    setAdd(true);
+  };
+
+  const handleCreate = () => {
+    setUpdate(false);
+    setAdd(true);
+  };
 
   return (
     <Box sx={{ bgcolor: "background.paper" }}>
@@ -193,6 +220,7 @@ export default function MeasurementTab({ userData }) {
             onMeasurementAdd={handleAddMeasurement}
             formData={formData}
             userData={userData}
+            update={update}
             onTextChange={onFormTextChange}
           />
           <Box
@@ -227,17 +255,40 @@ export default function MeasurementTab({ userData }) {
       {!add && (
         <Box
           sx={{
-            width: { xs: "200px" },
+            width: { xs: "90%", sm: "650px" },
             position: "absolute",
             bottom: 20,
+            // backgroundColor: "red",
+            // display: "flex",
+            // flexDirection: { xs: "column", sm: "row" },
           }}
         >
           <Button
-            onClick={() => setAdd(true)}
-            variant="contained"
-            sx={{ width: { xs: "100%" } }}
+            onClick={handleCreate}
+            variant="outlined"
+            startIcon={<AddCircle />}
+            size={"small"}
           >
-            Add Measurement
+            Add
+          </Button>
+          <Button
+            onClick={handleUpdate}
+            variant="outlined"
+            color="success"
+            startIcon={<Edit />}
+            size={"small"}
+            marginX="10px"
+          >
+            Edit
+          </Button>
+          <Button
+            onClick={handleDelete}
+            variant="outlined"
+            color="error"
+            startIcon={<DeleteIcon />}
+            size={"small"}
+          >
+            Delete
           </Button>
         </Box>
       )}

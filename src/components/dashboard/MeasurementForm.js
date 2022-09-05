@@ -5,7 +5,10 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useSelector } from "react-redux";
-import { createClientMeasurement } from "api/clients.api";
+import {
+  createClientMeasurement,
+  updateClientMeasurement,
+} from "api/clients.api";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const addClientMeasurement = yup.object().shape({
@@ -32,34 +35,37 @@ export default function MeasurementForm({
   onMeasurementAdd,
   onTextChange,
   formData,
+  update,
   userData,
 }) {
-  const form = {
-    measurement_owner: "",
-    bust_point: "",
-    under_bust: "",
-    half_length: "",
-    shoulder_to_hip: "",
-    blouse_length: "",
-    shoulder_to_knee: "",
-    gown_length: "",
-    waist_to_knee: "",
-    skirt_length: "",
-    bust_round: "",
+  const form = update
+    ? formData
+    : {
+        measurement_owner: "",
+        bust_point: "",
+        under_bust: "",
+        half_length: "",
+        shoulder_to_hip: "",
+        blouse_length: "",
+        shoulder_to_knee: "",
+        gown_length: "",
+        waist_to_knee: "",
+        skirt_length: "",
+        bust_round: "",
 
-    center_front: "",
-    back_half_length: "",
-    corset_length: "",
-    neck_round: "",
+        center_front: "",
+        back_half_length: "",
+        corset_length: "",
+        neck_round: "",
 
-    under_bust_round: "",
-    waist_round: "",
-    hips_round: "",
-    sleeve_length: "",
-    sleeve_round_biceps: "",
-    shoulder: "",
-    arm_hole: "",
-  };
+        under_bust_round: "",
+        waist_round: "",
+        hips_round: "",
+        sleeve_length: "",
+        sleeve_round_biceps: "",
+        shoulder: "",
+        arm_hole: "",
+      };
 
   const { token } = useSelector((state) => state.auth);
   const [loading, setLoading] = React.useState(false);
@@ -75,6 +81,28 @@ export default function MeasurementForm({
       ...measurement,
     });
     const data = await createClientMeasurement(
+      {
+        owner: userData.id,
+        ...measurement,
+      },
+      token
+    );
+
+    setLoading(false);
+
+    if (data) {
+      onMeasurementAdd(data);
+    }
+  };
+
+  const handleEditMeasurement = async (measurement) => {
+    if (measurement.measurement_owner === "") {
+      alert("You need to set a measurement owner");
+      return;
+    }
+    setLoading(true);
+    console.log(measurement);
+    const data = await updateClientMeasurement(
       {
         owner: userData.id,
         ...measurement,
@@ -110,7 +138,9 @@ export default function MeasurementForm({
     <Formik
       // validationSchema={addClientMeasurement}
       initialValues={form}
-      onSubmit={(e) => handleAddMeasurement(e)}
+      onSubmit={(e) =>
+        update ? handleEditMeasurement(e) : handleAddMeasurement(e)
+      }
     >
       {({
         errors,
@@ -390,7 +420,7 @@ export default function MeasurementForm({
                 variant="contained"
                 sx={{ width: { xs: "100%", sm: "50%" } }}
               >
-                Add Measurement
+                {update ? "Update Measurement" : "Add Measurement"}
               </Button>
               {Object.keys(errors).length > 0 && (
                 <Typography color="red">
