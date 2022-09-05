@@ -82,6 +82,14 @@ const slice = createSlice({
     addClients: (state, { payload }) => {
       state.clients = [payload, ...state.clients];
     },
+    removeClients: (state, { payload }) => {
+      state.clients = state.clients.filter((client) => client.id !== payload);
+    },
+    editClients: (state, { payload }) => {
+      state.clients = state.clients.map((client) =>
+        client.id === payload.id ? payload : client
+      );
+    },
   },
   extraReducers: {
     [login.pending]: (state) => {
@@ -126,8 +134,15 @@ const slice = createSlice({
 });
 export default slice.reducer;
 
-export const { logoutSuccess, addClients, setOrders, addOrders, removeOrder } =
-  slice.actions;
+export const {
+  logoutSuccess,
+  addClients,
+  removeClients,
+  editClients,
+  setOrders,
+  addOrders,
+  removeOrder,
+} = slice.actions;
 
 export const logout = () => async (dispatch) => {
   try {

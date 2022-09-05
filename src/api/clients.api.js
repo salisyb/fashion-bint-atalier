@@ -245,3 +245,45 @@ export const deleteOrderInformation = async (orderId, data, token) => {
 
   return false;
 };
+
+export const deleteClient = async (clientId) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  const res = await api.delete(`/api/v1/auth/client/${clientId}/`, {}, config);
+
+  if (res.ok) {
+    return true;
+  }
+
+  return false;
+};
+
+export const editClient = async (clientData, token) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  if (token) {
+    config.headers["Authorization"] = `Token ${token}`;
+  }
+
+  const res = await api.put(
+    `/api/v1/auth/client/${clientData.id}/`,
+    clientData,
+    config
+  );
+
+  if (res.ok) {
+    return res.data;
+  }
+
+  console.log(res.problem);
+  console.log(res.data);
+  return false;
+};

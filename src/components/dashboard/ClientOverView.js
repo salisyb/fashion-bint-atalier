@@ -22,7 +22,13 @@ import PlusIcon from "@mui/icons-material/ControlPoint";
 import TabPanel from "./TabPanel";
 import MeasurementTab from "./MeasurementTab";
 import { useDispatch, useSelector } from "react-redux";
-import { createClient, getClient } from "store/auth";
+import {
+  createClient,
+  getClient,
+  removeClients,
+  editClients,
+} from "store/auth";
+import { deleteClient, editClient } from "api/clients.api";
 
 const addNewClientSchema = yup.object().shape({
   email: yup
@@ -57,13 +63,18 @@ const initialState = {
   password: "",
 };
 
-const AddNewOrder = ({ onSubmit, formData, onInput }) => {
+const AddNewOrder = ({ onSubmit, formData, onInput, update }) => {
   const dispatch = useDispatch();
 
   const handleRegisterClient = (form) => {
     const { full_name, phone_number, email, address, username, password } =
       form;
     const [first_name, last_name] = full_name.split(" ");
+
+    if (update) {
+      onSubmit(form);
+      return;
+    }
 
     dispatch(
       createClient({
@@ -84,7 +95,17 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
     <div>
       <Formik
         validationSchema={addNewClientSchema}
-        initialValues={initialState}
+        initialValues={
+          update
+            ? {
+                ...formData,
+                full_name: `${formData.first_name} ${formData.last_name} `,
+                address: formData.clientsinformation.address,
+                phone_number: formData.clientsinformation.phone_number,
+                password: "",
+              }
+            : initialState
+        }
         onSubmit={(data) => handleRegisterClient(data)}
       >
         {({
@@ -163,7 +184,7 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
                 sx={{ width: "100%" }}
                 onClick={handleSubmit}
               >
-                Add New Client
+                {update ? "Update Client" : "Add New Client"}
               </Button>
             </Box>
           </Form>
@@ -287,9 +308,9 @@ export default function ClientOverview() {
 
   const [client, setClient] = React.useState([]);
   const [clientData, setClientData] = React.useState(null);
+  const [updateClient, setUpdateClient] = React.useState(false);
 
   const { clients } = useSelector((state) => state.auth);
-  console.log(clients);
 
   React.useEffect(() => {
     // get list of client
@@ -297,7 +318,12 @@ export default function ClientOverview() {
     dispatch(getClient());
   }, []);
 
-  const handleAddClient = () => {
+  const handleAddClient = async (data) => {
+    if (updateClient) {
+      handleEditUser(data);
+      handleCloseModal();
+      return;
+    }
     handleCloseModal();
   };
 
@@ -325,6 +351,48 @@ export default function ClientOverview() {
     setAddClientForm({ ...addClientForm, [e.target.name]: e.target.value });
   };
 
+  const handleDeleteUser = async (userData) => {
+    await deleteClient(userData.id);
+    dispatch(removeClients(userData.id));
+  };
+  const handleEditUser = async (userData) => {
+    const data = {
+      id: userData.id,
+      first_name: userData.full_name.split(" ")[0],
+      last_name: userData.full_name.split(" ")[1],
+      username: userData.username,
+      clientsinformation: {
+        address: userData.address,
+        phone_number: userData.phone_number,
+      },
+      email: userData.email,
+      password: userData.password,
+    };
+    const updateData = await editClient(data);
+    if (updateData) {
+      dispatch(editClients(updateData));
+    }
+  };
+
+  const handleUserOption = (type, userData) => {
+    switch (type) {
+      case "delete":
+        handleDeleteUser(userData);
+        break;
+      case "edit":
+        setAddClientForm(userData);
+        setUpdateClient(true);
+        setSelectedOption("add new client");
+        setTitle("Update Client");
+
+        handleCloseModal();
+
+        break;
+      default:
+        return;
+    }
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       {/* <Typography variant={'h6'}>Welcome to dashboard</Typography> */}
@@ -334,6 +402,7 @@ export default function ClientOverview() {
             formData={addClientForm}
             onInput={handleInput}
             onSubmit={handleAddClient}
+            update={updateClient}
           />
         ) : (
           <ViewEditOrder data={clientData} />
@@ -412,8 +481,9 @@ export default function ClientOverview() {
               ) : (
                 <Table
                   onRowClick={handleOpenModal}
-                  tableHeader={["Client Name", "Client Number"]}
+                  tableHeader={["Client Name", ""]}
                   tableContent={clients}
+                  onOptionClick={handleUserOption}
                 />
               )}
             </div>
