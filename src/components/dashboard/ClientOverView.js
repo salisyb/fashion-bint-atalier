@@ -312,6 +312,24 @@ export default function ClientOverview() {
 
   const { clients } = useSelector((state) => state.auth);
 
+  const [search, setSearch] = React.useState("");
+  const [filteredClient, setFilteredClient] = React.useState([]);
+
+  React.useEffect(() => {
+    if (search === "") {
+      setFilteredClient(clients);
+      return;
+    }
+
+    const filter = clients.filter((user) =>
+      `${user.first_name} ${user.last_name}`
+        .toLowerCase()
+        .includes(search.toLowerCase())
+    );
+
+    setFilteredClient(filter);
+  }, [search, clients]);
+
   React.useEffect(() => {
     // get list of client
 
@@ -462,9 +480,23 @@ export default function ClientOverview() {
               }}
             >
               <Typography variant={"p"} color={"white"}>
+                Search For Client
+              </Typography>
+
+              <TextField
+                id="outlined-controlled"
+                label="Search for Client"
+                sx={{ backgroundColor: "white", my: "15px" }}
+                fullWidth
+                value={search}
+                onChange={(event) => {
+                  setSearch(event.target.value);
+                }}
+              />
+              <Typography variant={"p"} color={"white"}>
                 List of Client
               </Typography>
-              {clients.length < 1 ? (
+              {filteredClient.length < 1 ? (
                 <div
                   style={{
                     display: "flex",
@@ -482,7 +514,7 @@ export default function ClientOverview() {
                 <Table
                   onRowClick={handleOpenModal}
                   tableHeader={["Client Name", ""]}
-                  tableContent={clients}
+                  tableContent={filteredClient}
                   onOptionClick={handleUserOption}
                 />
               )}

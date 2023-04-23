@@ -13,6 +13,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -104,7 +105,7 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
   };
 
   const handleFinishSelectingClient = () => {
-    console.log(client);
+  
   };
 
   const handleRegisterClientOrder = async (form) => {
@@ -226,7 +227,7 @@ const AddNewOrder = ({ onSubmit, formData, onInput }) => {
                   }}
                   renderInput={(params) => (
                     <>
-                      {console.log(params)}
+                    
                       <TextField {...params} />
                     </>
                   )}
@@ -956,11 +957,26 @@ export default function OverviewDashboard() {
   const { order } = useSelector((state) => state.auth);
   const [modalData, setModalData] = React.useState(null);
   const [markedOrder, setMarkedOrder] = React.useState([]);
+  const [search, setSearch] = React.useState("");
+  const [filteredOrder, setFilteredOrder] = React.useState([]);
+
+  React.useEffect(() => {
+    handleFilterOrder();
+  }, [search, order]);
 
   React.useEffect(() => {
     getOrders();
   }, []);
 
+  const handleFilterOrder = () => {
+    if(search === '') {
+      setFilteredOrder(order);
+      return;
+    }
+
+    const filter = order.filter(item => `${item.client.first_name} ${item.client.last_name}`.toLowerCase().includes(search.toLowerCase()));
+    setFilteredOrder(filter);
+  };
   React.useEffect(() => {
     // get list of client
 
@@ -1208,13 +1224,29 @@ export default function OverviewDashboard() {
                 }}
               >
                 <Typography variant={"p"} color={"white"}>
+                  Search For Order
+                </Typography>
+
+                <TextField
+                  id="outlined-controlled"
+                  label="Search for order"
+                  sx={{ backgroundColor: "white", my: '15px' }}
+                  fullWidth
+                  value={search}
+                  onChange={(event) => {
+                    setSearch(event.target.value);
+                  }}
+                
+                />
+
+                <Typography variant={"p"} color={"white"}>
                   Order status
                 </Typography>
-                {order.length !== 0 ? (
+                {filteredOrder.length !== 0 ? (
                   <TableOrder
                     onRowClick={handleOpenModal}
                     tableHeader={["Client Name", "Mark"]}
-                    tableContent={order}
+                    tableContent={filteredOrder}
                     onMark={handleOnMark}
                   />
                 ) : (
