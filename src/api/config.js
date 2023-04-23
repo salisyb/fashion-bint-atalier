@@ -2,7 +2,7 @@ import { create } from "apisauce";
 
 // define the api
  export const api = create({
-   baseURL: "https://apit-bint-atelier-production.up.railway.app",
+   baseURL: "https://api-bint-v2.onrender.com",
    headers: { Accept: "application/json" },
  });
 
